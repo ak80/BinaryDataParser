@@ -1,3 +1,5 @@
 .idea/
-snastac.iml
+*.ipr
+*.iws
+*.iml
 target/
