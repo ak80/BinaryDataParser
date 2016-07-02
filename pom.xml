@@ -15,7 +15,7 @@
     </modules>
 
         <name>${project.groupId}:${project.artifactId}</name>
-        <description>A library for parsing binary data</description>
+        <description>BinaryDataParser helps to parse binary data into POJOs, with custom parsers generated from annotations</description>
         <url>https://github.com/ak80/BinaryDataParser</url>
 
         <licenses>

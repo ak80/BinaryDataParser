@@ -1,5 +1,5 @@
 # BinaryDataParser
-A library to generate a parser / serializer for binary data
+BinaryDataParser helps to parse binary data into POJOs. It generates custom parsers from annotations.
 
 ## Status
 THIS PROJECT IS CURRENTLY A PROTOTYPE. Everything that works, works but some of the functionality is missing.
