@@ -8,15 +8,17 @@ import static org.hamcrest.MatcherAssert.assertThat;
 public class ByteDataParserTest {
 
   @Test
-  public void heavyPrototyping() {
+  public void byteMapping_setterGeneration_generatesSetter() {
     // Given
-    Foo foo = new Foo();
-    FooParser fooParser = new FooParser(foo);
+    TestClass testClass = new TestClass();
+    TestClassParser parser = new TestClassParser(testClass);
 
     // When
-    fooParser.setFoo2(23);
+    parser.setByte0(1);
+    parser.setByte1(2);
 
-    assertThat(foo.getFoo2(), is(23));
+    assertThat(testClass.getByte0(), is(1));
+    assertThat(testClass.getByte1(), is(2));
   }
 
 }
