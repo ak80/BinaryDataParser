@@ -2,7 +2,10 @@ package org.ak80.ubyte.bdp;
 
 import com.google.auto.service.AutoService;
 import org.ak80.ubyte.bdp.annotations.MappedByte;
+import org.ak80.ubyte.bdp.generator.BdpFileWriter;
 import org.ak80.ubyte.bdp.generator.BdpGenerator;
+import org.ak80.ubyte.bdp.generator.FileWriter;
+import org.ak80.ubyte.bdp.generator.Generator;
 import org.ak80.ubyte.bdp.model.ByteMappedClasses;
 import org.ak80.ubyte.bdp.processor.BdpProcessor;
 import org.ak80.ubyte.bdp.processor.CoreProcessor;
@@ -22,12 +25,15 @@ import java.util.Set;
 @AutoService(Processor.class)
 public class BinaryDataParserAnnotationsProcessor extends AbstractProcessor {
 
-  BdpProcessor bdpProcessor = new CoreProcessor(new ByteMappedClasses(), new BdpGenerator());
+  FileWriter bdpWriter = new BdpFileWriter();
+  Generator bdpGenerator = new BdpGenerator(bdpWriter);
+  BdpProcessor bdpProcessor = new CoreProcessor(new ByteMappedClasses(), bdpGenerator);
 
   @Override
   public synchronized void init(ProcessingEnvironment processingEnv) {
     super.init(processingEnv);
     this.bdpProcessor.init(processingEnv);
+    this.bdpWriter.init(processingEnv.getFiler());
   }
 
   @Override

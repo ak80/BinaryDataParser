@@ -3,7 +3,6 @@ package org.ak80.ubyte.bdp.processor
 import org.ak80.ubyte.bdp.annotations.MappedByte
 import org.ak80.ubyte.bdp.generator.Generator
 import org.ak80.ubyte.bdp.model.ByteMappedClasses
-import javax.annotation.processing.Filer
 import javax.annotation.processing.Messager
 import javax.annotation.processing.ProcessingEnvironment
 import javax.annotation.processing.RoundEnvironment
@@ -29,10 +28,6 @@ class CoreProcessor(private val byteMappedClasses: ByteMappedClasses, private va
 
     var processingEnvironment: ProcessingEnvironment? = null
 
-    private val filer: Filer by lazy {
-        processingEnvironment?.filer ?: throw IllegalStateException("the CoreProcessor was not initialized")
-    }
-
     private val messager: Messager by lazy {
         processingEnvironment?.messager ?: throw IllegalStateException("the CoreProcessor was not initialized")
     }
@@ -42,7 +37,7 @@ class CoreProcessor(private val byteMappedClasses: ByteMappedClasses, private va
     }
 
     override fun process(annotations: Set<TypeElement>, roundEnv: RoundEnvironment): Boolean {
-        var exit = false;
+        var exit: Boolean;
 
         for (annotatedElement in roundEnv.getElementsAnnotatedWith(MappedByte::class.java)) {
             exit = processMappedByte(annotatedElement)
@@ -50,7 +45,7 @@ class CoreProcessor(private val byteMappedClasses: ByteMappedClasses, private va
         }
 
         for (byteMappedClass in byteMappedClasses.getClasses()) {
-            generator.generateFor(byteMappedClass, filer)
+            generator.generateFor(byteMappedClass)
         }
 
         byteMappedClasses.clear()

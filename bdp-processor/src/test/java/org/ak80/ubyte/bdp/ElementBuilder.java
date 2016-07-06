@@ -1,7 +1,6 @@
-package org.ak80.ubyte.bdp.processor;
+package org.ak80.ubyte.bdp;
 
 import com.squareup.javapoet.ClassName;
-import com.squareup.javapoet.TypeName;
 import org.ak80.ubyte.bdp.annotations.MappedByte;
 
 import javax.lang.model.element.*;
@@ -20,13 +19,13 @@ public class ElementBuilder {
 
     Element parent = newElement(ElementKind.CLASS);
     when(parent.getSimpleName()).thenReturn(createName(parentClass.getSimpleName()));
-    when(parent.asType()).thenReturn(createTypeMirror(TypeKind.DECLARED,parentClass));
+    when(parent.asType()).thenReturn(createTypeMirror(TypeKind.DECLARED, parentClass));
     when(((TypeElement) parent).getQualifiedName()).thenReturn(createName(parentClass.getName()));
 
     Element element = newElement(ElementKind.FIELD);
     when(element.getEnclosingElement()).thenReturn(parent);
     when(element.getSimpleName()).thenReturn(createName(fieldName));
-    when(element.asType()).thenReturn(createTypeMirror(fieldType,null));
+    when(element.asType()).thenReturn(createTypeMirror(fieldType, null));
     when(element.getAnnotation(MappedByte.class)).thenReturn(mappedByte);
     return element;
   }
@@ -68,7 +67,7 @@ public class ElementBuilder {
     };
   }
 
-  private static TypeMirror createTypeMirror(TypeKind kind, Class clazz) {
+  public static TypeMirror createTypeMirror(TypeKind kind, Class clazz) {
     return new TestingTypeElement(kind, clazz);
   }
 
@@ -89,7 +88,7 @@ public class ElementBuilder {
 
     @Override
     public <R, P> R accept(TypeVisitor<R, P> v, P p) {
-      return (R) ClassName.get(clazz) ;
+      return (R) ClassName.get(clazz);
     }
 
     @Override

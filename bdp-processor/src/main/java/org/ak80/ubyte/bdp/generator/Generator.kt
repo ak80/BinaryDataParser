@@ -14,22 +14,22 @@ import javax.lang.model.element.Modifier
  */
 interface Generator {
 
-    fun generateFor(byteMappedClass: ByteMappedClass, filer: Filer)
+    fun generateFor(byteMappedClass: ByteMappedClass)
 
 }
 
 /**
  * Generates source files
  */
-class BdpGenerator() : Generator {
+class BdpGenerator(private var fileWriter: FileWriter) : Generator {
 
     val SUFFIX = "Parser"
     var instanceField = ""
 
-    override fun generateFor(byteMappedClass: ByteMappedClass, filer: Filer) {
+    override fun generateFor(byteMappedClass: ByteMappedClass) {
         var parserClassName = byteMappedClass.simpleName + SUFFIX
 
-        var builder = TypeSpec.classBuilder(parserClassName).addModifiers(Modifier.PUBLIC);
+        var builder = createBuilder(parserClassName)
 
         instanceField = byteMappedClass.simpleName.decapitalize()
 
@@ -46,12 +46,11 @@ class BdpGenerator() : Generator {
             builder = createMethod(builder, mappingInfo)
         }
 
-        val parserClass = builder.build()
-
-        val javaFile = JavaFile.builder(byteMappedClass.packageName, parserClass).build()
-
-        javaFile.writeTo(filer);
+        fileWriter.write(byteMappedClass.packageName, builder)
     }
+
+    private fun createBuilder(className: String) = TypeSpec.classBuilder(className).addModifiers(Modifier.PUBLIC)
+
 
     private fun createMethod(builder: TypeSpec.Builder, mappingInfo: ByteMappingInfo): TypeSpec.Builder {
         var builder1 = builder
@@ -65,6 +64,47 @@ class BdpGenerator() : Generator {
                 """.trimMargin())
                 .build())
         return builder1
+    }
+
+}
+
+/**
+ * Write a Java file
+ */
+interface FileWriter {
+
+    /**
+     * Init the writer
+     *
+     * @param filer the [Filer] to use
+     */
+    fun init(filer: Filer)
+
+    /**
+     * Write spec from builder to file in given package
+     * @param packageName the package name
+     * @param the Builder from JavaPoet
+     */
+    fun write(packageName: String, builder: TypeSpec.Builder)
+
+}
+
+/**
+ * Concrete writer
+ */
+class BdpFileWriter() : FileWriter {
+
+    private var filer: Filer? = null
+
+    override fun init(filer: Filer) {
+        this.filer = filer
+    }
+
+
+    override fun write(packageName: String, builder: TypeSpec.Builder) {
+        val parserClass = builder.build()
+        val javaFile = JavaFile.builder(packageName, parserClass).build()
+        javaFile.writeTo(filer);
     }
 
 }

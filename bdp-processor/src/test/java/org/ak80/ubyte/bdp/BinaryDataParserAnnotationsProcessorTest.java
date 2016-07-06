@@ -1,13 +1,16 @@
 package org.ak80.ubyte.bdp;
 
 import org.ak80.ubyte.bdp.annotations.MappedByte;
+import org.ak80.ubyte.bdp.generator.FileWriter;
 import org.ak80.ubyte.bdp.processor.BdpProcessor;
 import org.ak80.ubyte.bdp.processor.CoreProcessor;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Answers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import javax.annotation.processing.Filer;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.SourceVersion;
@@ -19,6 +22,7 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class BinaryDataParserAnnotationsProcessorTest {
@@ -27,7 +31,13 @@ public class BinaryDataParserAnnotationsProcessorTest {
   private BdpProcessor bdpProcessor;
 
   @Mock
+  private FileWriter fileWriter;
+
+  @Mock(answer = Answers.RETURNS_DEEP_STUBS)
   private ProcessingEnvironment processingEnv;
+
+  @Mock
+  private Filer filer;
 
   @Mock
   private RoundEnvironment roundEnvironment;
@@ -54,6 +64,21 @@ public class BinaryDataParserAnnotationsProcessorTest {
     // Then
     verify(bdpProcessor).init(processingEnv);
   }
+
+  @Test
+  public void init_whenInitWithProcessingEnv_initWriter() {
+    // Given
+    BinaryDataParserAnnotationsProcessor processor = new BinaryDataParserAnnotationsProcessor();
+    processor.bdpWriter = fileWriter;
+    when(processingEnv.getFiler()).thenReturn(filer);
+
+    // When
+    processor.init(processingEnv);
+
+    // Then
+    verify(processor.bdpWriter).init(filer);
+  }
+
 
   @Test
   public void annotations_getSupported_containsAnnotations() {

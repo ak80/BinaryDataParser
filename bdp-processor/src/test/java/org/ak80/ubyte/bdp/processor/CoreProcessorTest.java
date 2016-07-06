@@ -1,6 +1,7 @@
 package org.ak80.ubyte.bdp.processor;
 
 import com.squareup.javapoet.TypeName;
+import org.ak80.ubyte.bdp.ElementBuilder;
 import org.ak80.ubyte.bdp.Utils;
 import org.ak80.ubyte.bdp.annotations.MappedByte;
 import org.ak80.ubyte.bdp.generator.Generator;
@@ -23,14 +24,13 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeKind;
-import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 import javax.tools.Diagnostic;
-import java.lang.reflect.Type;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static org.ak80.ubyte.bdp.Utils.createMappedByte;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertThat;
@@ -116,7 +116,7 @@ public class CoreProcessorTest {
     coreProcessor.process(typeElements, roundEnv);
 
     // Then
-    verify(generator).generateFor(any(), eq(filer));
+    verify(generator).generateFor(any());
   }
 
   @Test
@@ -142,21 +142,31 @@ public class CoreProcessorTest {
     coreProcessor.process(typeElements, roundEnv);
 
     // Then
-    verify(generator, times(2)).generateFor(byteMappedClassCaptor.capture(), eq(filer));
+    verify(generator, times(2)).generateFor(byteMappedClassCaptor.capture());
     List<ByteMappedClass> byteMappedClasses = byteMappedClassCaptor.getAllValues();
 
     assertThat(byteMappedClasses, hasSize(2));
 
-    ByteMappedClass byteMappedClass = byteMappedClasses.get(0);
+    Map<String, ByteMappedClass> mappedBySimpleName = getMapBySimpleName(byteMappedClasses);
+
+    ByteMappedClass byteMappedClass = mappedBySimpleName.get(CoreProcessor.class.getSimpleName());
     verifyParent(byteMappedClass, CoreProcessor.class);
     Map<String, List<ByteMappingInfo>> map = byteMappedClass.getMappings().stream().collect(Collectors.groupingBy(ByteMappingInfo::getName));
 
     verifyMappedByte(map.get("foo1").get(0), "INT", mappedByte1);
     verifyMappedByte(map.get("foo2").get(0), "INT", mappedByte2);
 
-    byteMappedClass = byteMappedClasses.get(1);
+    byteMappedClass = mappedBySimpleName.get(ElementBuilder.class.getSimpleName());
     verifyParent(byteMappedClass, ElementBuilder.class);
     verifyMappedByte(byteMappedClass.getMappings().get(0), "INT", mappedByte3);
+  }
+
+  private Map<String, ByteMappedClass> getMapBySimpleName(List<ByteMappedClass> byteMappedClasses) {
+    Map<String, ByteMappedClass> map = new HashMap<>();
+    for (ByteMappedClass byteMappedClass : byteMappedClasses) {
+      map.put(byteMappedClass.getSimpleName(), byteMappedClass);
+    }
+    return map;
   }
 
   private void verifyMappedByte(ByteMappingInfo byteMappingInfo, String type, MappedByte mappedByte) {
@@ -168,7 +178,7 @@ public class CoreProcessorTest {
     assertThat("SimpleName", byteMappedClass.getSimpleName(), is(parentClass.getSimpleName()));
     assertThat("QualifiedName", byteMappedClass.getQualifiedName(), is(parentClass.getName()));
     assertThat("PackageName", byteMappedClass.getPackageName(), is(parentClass.getPackage().getName()));
-    assertThat(TypeName.get(byteMappedClass.getParentType()).toString(),is(parentClass.getName()));
+    assertThat(TypeName.get(byteMappedClass.getParentType()).toString(), is(parentClass.getName()));
   }
 
   @Test
@@ -188,13 +198,6 @@ public class CoreProcessorTest {
 
     // Then
     assertThat(byteMappedClasses.getClasses(), hasSize(0));
-  }
-
-  private MappedByte createMappedByte(int index, String name) {
-    MappedByte mappedByte = mock(MappedByte.class);
-    when(mappedByte.index()).thenReturn(index);
-    when(mappedByte.name()).thenReturn(name);
-    return mappedByte;
   }
 
   @Test
