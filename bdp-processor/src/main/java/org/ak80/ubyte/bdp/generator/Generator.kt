@@ -1,9 +1,6 @@
 package org.ak80.ubyte.bdp.generator
 
-import com.squareup.javapoet.JavaFile
-import com.squareup.javapoet.MethodSpec
-import com.squareup.javapoet.TypeName
-import com.squareup.javapoet.TypeSpec
+import com.squareup.javapoet.*
 import org.ak80.ubyte.bdp.model.ByteMappedClass
 import org.ak80.ubyte.bdp.model.ByteMappingInfo
 import javax.annotation.processing.Filer
@@ -42,9 +39,20 @@ class BdpGenerator(private var fileWriter: FileWriter) : Generator {
                 """.trimMargin())
                 .build())
 
+        var parseMethodCode =StringBuilder()
+
         for (mappingInfo in byteMappedClass.getMappings()) {
+
             builder = createMethod(builder, mappingInfo)
+
+            var setterName = getSetterName(mappingInfo)
+            parseMethodCode.append("$setterName(data[${mappingInfo.mappedByte.index}]);\n")
         }
+
+        builder = builder.addMethod(MethodSpec.methodBuilder("parse")
+                .addParameter(ArrayTypeName.of(TypeName.INT), "data")
+                .addCode(parseMethodCode.toString())
+                .build())
 
         fileWriter.write(byteMappedClass.packageName, builder)
     }
@@ -54,7 +62,7 @@ class BdpGenerator(private var fileWriter: FileWriter) : Generator {
 
     private fun createMethod(builder: TypeSpec.Builder, mappingInfo: ByteMappingInfo): TypeSpec.Builder {
         var builder1 = builder
-        var setterName = "set${mappingInfo.name.capitalize()}"
+        var setterName = getSetterName(mappingInfo)
         builder1 = builder1.addMethod(MethodSpec.methodBuilder(setterName)
                 .addParameter(TypeName.INT, "value")
                 .addCode("""
@@ -65,6 +73,8 @@ class BdpGenerator(private var fileWriter: FileWriter) : Generator {
                 .build())
         return builder1
     }
+
+    private fun getSetterName(mappingInfo: ByteMappingInfo) = "set${mappingInfo.name.capitalize()}"
 
 }
 

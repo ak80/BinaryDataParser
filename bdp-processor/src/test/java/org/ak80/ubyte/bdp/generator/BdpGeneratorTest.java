@@ -1,6 +1,7 @@
 package org.ak80.ubyte.bdp.generator;
 
 
+import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
 import org.ak80.ubyte.bdp.ElementBuilder;
 import org.ak80.ubyte.bdp.model.ByteMappedClass;
@@ -28,6 +29,9 @@ public class BdpGeneratorTest {
   private static final String packageName = "org.ak80.ubyte.bdp";
   private static final String className = "SimpleName";
   private static final String parserClassName = className + "Parser";
+
+  private static final int METHOD_INDEX_CONSTRUCTOR = 0;
+  private static final int METHOD_INDEX_FIRST_SETTER_METHOD = 1;
 
   @Mock
   private FileWriter fileWriter;
@@ -88,14 +92,35 @@ public class BdpGeneratorTest {
     bdpGenerator.generateFor(byteMappedClass);
 
     // Then
-    TypeSpec typeSpec = getTypeSpec();
-    assertThat(typeSpec.methodSpecs.get(0).isConstructor(), is(true));
-    assertThat(typeSpec.methodSpecs.get(0).parameters.get(0).toString(), is("java.lang.String simpleName"));
-    assertThat(typeSpec.methodSpecs.get(0).code.toString(), is("this.simpleName = simpleName;"));
+    MethodSpec constructor = getTypeSpec().methodSpecs.get(METHOD_INDEX_CONSTRUCTOR);
+    assertThat(constructor.isConstructor(), is(true));
+    assertThat(constructor.parameters.get(0).toString(), is("java.lang.String simpleName"));
+    assertThat(constructor.code.toString(), is("this.simpleName = simpleName;"));
   }
 
   @Test
-  public void build_byteMapping_withBuilder() {
+  public void build_parserMethod_withBuilder() {
+    // Given
+    BdpGenerator bdpGenerator = new BdpGenerator(fileWriter);
+    byteMappedClass.addByteMapping("field1", "Foo", createMappedByte(1, "name1"));
+    byteMappedClass.addByteMapping("field2", "Foo", createMappedByte(3, "name2"));
+
+    // When
+    bdpGenerator.generateFor(byteMappedClass);
+
+    // Then
+    MethodSpec parseMethod = getTypeSpec().methodSpecs.get(getParserMethodIndex(byteMappedClass));
+    assertThat(parseMethod.name, is("parse"));
+    assertThat(parseMethod.parameters.get(0).toString(), is("int[] data"));
+    assertThat(parseMethod.code.toString(), is("setField1(data[1]);\nsetField2(data[3]);\n"));
+  }
+
+  private int getParserMethodIndex(ByteMappedClass byteMappedClass) {
+    return byteMappedClass.getMappings().size()+METHOD_INDEX_FIRST_SETTER_METHOD;
+  }
+
+  @Test
+  public void build_setterForByteMapping_withBuilder() {
     // Given
     BdpGenerator bdpGenerator = new BdpGenerator(fileWriter);
     byteMappedClass.addByteMapping("foo", "Foo", createMappedByte(1, "name"));
@@ -104,10 +129,10 @@ public class BdpGeneratorTest {
     bdpGenerator.generateFor(byteMappedClass);
 
     // Then
-    TypeSpec typeSpec = getTypeSpec();
-    assertThat(typeSpec.methodSpecs.get(1).isConstructor(), is(false));
-    assertThat(typeSpec.methodSpecs.get(1).parameters.get(0).toString(), is("int value"));
-    assertThat(typeSpec.methodSpecs.get(1).code.toString(), is("// Foo 1 name\nsimpleName.setFoo(value);\n"));
+    MethodSpec setter = getTypeSpec().methodSpecs.get(METHOD_INDEX_FIRST_SETTER_METHOD);
+    assertThat(setter.name, is("setFoo"));
+    assertThat(setter.parameters.get(0).toString(), is("int value"));
+    assertThat(setter.code.toString(), is("// Foo 1 name\nsimpleName.setFoo(value);\n"));
   }
 
   @NotNull
