@@ -2,13 +2,7 @@ package org.ak80.ubyte.bdp;
 
 import com.google.auto.service.AutoService;
 import org.ak80.ubyte.bdp.annotations.MappedByte;
-import org.ak80.ubyte.bdp.generator.BdpFileWriter;
-import org.ak80.ubyte.bdp.generator.BdpGenerator;
-import org.ak80.ubyte.bdp.generator.FileWriter;
-import org.ak80.ubyte.bdp.generator.Generator;
-import org.ak80.ubyte.bdp.model.ByteMappedClasses;
-import org.ak80.ubyte.bdp.processor.BdpProcessor;
-import org.ak80.ubyte.bdp.processor.CoreProcessor;
+import org.ak80.ubyte.bdp.annotations.MappedWord;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.ProcessingEnvironment;
@@ -27,7 +21,7 @@ public class BinaryDataParserAnnotationsProcessor extends AbstractProcessor {
 
   FileWriter bdpWriter = new BdpFileWriter();
   Generator bdpGenerator = new BdpGenerator(bdpWriter);
-  BdpProcessor bdpProcessor = new CoreProcessor(new ByteMappedClasses(), bdpGenerator);
+  BdpProcessor bdpProcessor = new CoreProcessor(new MappedClasses(), bdpGenerator);
 
   @Override
   public synchronized void init(ProcessingEnvironment processingEnv) {
@@ -45,6 +39,7 @@ public class BinaryDataParserAnnotationsProcessor extends AbstractProcessor {
   public Set<String> getSupportedAnnotationTypes() {
     Set<String> annotations = new LinkedHashSet<String>();
     annotations.add(MappedByte.class.getCanonicalName());
+    annotations.add(MappedWord.class.getCanonicalName());
     return annotations;
   }
 

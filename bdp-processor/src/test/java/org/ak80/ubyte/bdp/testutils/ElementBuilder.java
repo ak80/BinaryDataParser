@@ -1,7 +1,9 @@
-package org.ak80.ubyte.bdp;
+package org.ak80.ubyte.bdp.testutils;
 
 import com.squareup.javapoet.ClassName;
 import org.ak80.ubyte.bdp.annotations.MappedByte;
+import org.ak80.ubyte.bdp.annotations.MappedWord;
+import org.jetbrains.annotations.NotNull;
 
 import javax.lang.model.element.*;
 import javax.lang.model.type.TypeKind;
@@ -14,9 +16,19 @@ import static org.mockito.Mockito.*;
 
 public class ElementBuilder {
 
+  public static Element createMappedField(String fieldName, TypeKind fieldType, MappedByte annotation, Class parentClass) {
+    Element element = getElement(fieldName, fieldType, parentClass);
+    when(element.getAnnotation(MappedByte.class)).thenReturn(annotation);
+    return element;
+  }
 
-  public static Element createMappedField(String fieldName, TypeKind fieldType, MappedByte mappedByte, Class parentClass) {
+  public static Element createMappedField(String fieldName, TypeKind fieldType, MappedWord annotation, Class parentClass) {
+    Element element = getElement(fieldName, fieldType, parentClass);
+    when(element.getAnnotation(MappedWord.class)).thenReturn(annotation);
+    return element;
+  }
 
+  private static Element getElement(String fieldName, TypeKind fieldType, Class parentClass) {
     Element parent = newElement(ElementKind.CLASS);
     when(parent.getSimpleName()).thenReturn(createName(parentClass.getSimpleName()));
     when(parent.asType()).thenReturn(createTypeMirror(TypeKind.DECLARED, parentClass));
@@ -26,7 +38,6 @@ public class ElementBuilder {
     when(element.getEnclosingElement()).thenReturn(parent);
     when(element.getSimpleName()).thenReturn(createName(fieldName));
     when(element.asType()).thenReturn(createTypeMirror(fieldType, null));
-    when(element.getAnnotation(MappedByte.class)).thenReturn(mappedByte);
     return element;
   }
 

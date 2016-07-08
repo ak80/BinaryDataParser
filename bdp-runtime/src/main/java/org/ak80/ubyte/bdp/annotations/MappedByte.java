@@ -1,7 +1,7 @@
 package org.ak80.ubyte.bdp.annotations;
 
 /**
- * Defines the mapping of one byte to a custom field
+ * Defines the mapping of one byte to a field
  */
 public @interface MappedByte {
 

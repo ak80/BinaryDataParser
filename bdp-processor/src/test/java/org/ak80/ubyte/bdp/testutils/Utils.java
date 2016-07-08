@@ -1,7 +1,9 @@
-package org.ak80.ubyte.bdp;
+package org.ak80.ubyte.bdp.testutils;
 
 
+import org.ak80.ubyte.bdp.annotations.Endian;
 import org.ak80.ubyte.bdp.annotations.MappedByte;
+import org.ak80.ubyte.bdp.annotations.MappedWord;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -19,7 +21,6 @@ public class Utils {
     return set;
   }
 
-
   public static MappedByte createMappedByte(int index, String name) {
     MappedByte mappedByte = mock(MappedByte.class);
     when(mappedByte.index()).thenReturn(index);
@@ -27,5 +28,12 @@ public class Utils {
     return mappedByte;
   }
 
+  public static MappedWord createMappedWord(int index, String name, Endian endian) {
+    MappedWord mappedWord = mock(MappedWord.class);
+    when(mappedWord.index()).thenReturn(index);
+    when(mappedWord.name()).thenReturn(name);
+    when(mappedWord.endianess()).thenReturn(endian);
+    return mappedWord;
+  }
 
 }

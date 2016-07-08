@@ -1,14 +1,14 @@
-package org.ak80.ubyte.bdp.processor;
+package org.ak80.ubyte.bdp;
 
 import com.squareup.javapoet.TypeName;
-import org.ak80.ubyte.bdp.ElementBuilder;
-import org.ak80.ubyte.bdp.Utils;
+import org.ak80.ubyte.bdp.annotations.Endian;
 import org.ak80.ubyte.bdp.annotations.MappedByte;
-import org.ak80.ubyte.bdp.generator.Generator;
-import org.ak80.ubyte.bdp.model.ByteMappedClass;
-import org.ak80.ubyte.bdp.model.ByteMappedClasses;
-import org.ak80.ubyte.bdp.model.ByteMappingInfo;
+import org.ak80.ubyte.bdp.annotations.MappedWord;
+import org.ak80.ubyte.bdp.testutils.ElementBuilder;
+import org.ak80.ubyte.bdp.testutils.Utils;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
@@ -27,21 +27,26 @@ import javax.lang.model.type.TypeKind;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 import javax.tools.Diagnostic;
+import java.lang.annotation.Annotation;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static org.ak80.ubyte.bdp.Utils.createMappedByte;
+import static org.ak80.ubyte.bdp.testutils.Utils.createMappedByte;
+import static org.ak80.ubyte.bdp.testutils.Utils.createMappedWord;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 
 
+//FIXME review this
 @RunWith(MockitoJUnitRunner.class)
 public class CoreProcessorTest {
 
+  @Rule
+  public ExpectedException expectedException = ExpectedException.none();
 
-  private ByteMappedClasses byteMappedClasses = new ByteMappedClasses();
+  private MappedClasses mappedClasses = new MappedClasses();
 
   @Mock
   private Generator generator;
@@ -66,12 +71,12 @@ public class CoreProcessorTest {
   private RoundEnvironment roundEnv;
 
   @Captor
-  private ArgumentCaptor<ByteMappedClass> byteMappedClassCaptor;
+  private ArgumentCaptor<MappedClass> byteMappedClassCaptor;
 
   @Test
   public void process_emptySet_returnsTrue() {
     // Given
-    CoreProcessor coreProcessor = new CoreProcessor(byteMappedClasses, generator);
+    CoreProcessor coreProcessor = new CoreProcessor(mappedClasses, generator);
     coreProcessor.init(processingEnv);
 
     // When
@@ -84,14 +89,14 @@ public class CoreProcessorTest {
   @Test
   public void process_containsByteMapped_returnsTrue() {
     // Given
-    CoreProcessor coreProcessor = new CoreProcessor(byteMappedClasses, generator);
+    CoreProcessor coreProcessor = new CoreProcessor(mappedClasses, generator);
     coreProcessor.init(processingEnv);
 
     MappedByte mappedByte = createMappedByte(0, "name");
     Element element = ElementBuilder.createMappedField("foo", TypeKind.INT, mappedByte, CoreProcessor.class);
 
     Set<? extends Element> elements = Utils.setOf(element);
-    setupElementsInRoundEnv(elements);
+    setupMappedByteElementsInRoundEnv(elements);
 
     // When
     boolean result = coreProcessor.process(typeElements, roundEnv);
@@ -100,17 +105,16 @@ public class CoreProcessorTest {
     assertThat(result, is(true));
   }
 
-
   @Test
   public void process_containsByteMapped_callsGenerator() {
     // Given
-    CoreProcessor coreProcessor = new CoreProcessor(byteMappedClasses, generator);
+    CoreProcessor coreProcessor = new CoreProcessor(mappedClasses, generator);
     coreProcessor.init(processingEnv);
 
     MappedByte mappedByte = createMappedByte(0, "name");
     Element element = ElementBuilder.createMappedField("foo", TypeKind.INT, mappedByte, CoreProcessor.class);
     Set<? extends Element> elements = Utils.setOf(element);
-    setupElementsInRoundEnv(elements);
+    setupMappedByteElementsInRoundEnv(elements);
 
     // When
     coreProcessor.process(typeElements, roundEnv);
@@ -122,7 +126,7 @@ public class CoreProcessorTest {
   @Test
   public void process_containsByteMappedComplex_callsGeneratorWithMappedByteInfo() {
     // Given
-    CoreProcessor coreProcessor = new CoreProcessor(byteMappedClasses, generator);
+    CoreProcessor coreProcessor = new CoreProcessor(mappedClasses, generator);
     coreProcessor.init(processingEnv);
 
 
@@ -136,89 +140,132 @@ public class CoreProcessorTest {
     Element element3 = ElementBuilder.createMappedField("foo", TypeKind.INT, mappedByte3, ElementBuilder.class);
 
     Set<? extends Element> elements = Utils.setOf(element1, element2, element3);
-    setupElementsInRoundEnv(elements);
+    setupMappedByteElementsInRoundEnv(elements);
 
     // When
     coreProcessor.process(typeElements, roundEnv);
 
     // Then
     verify(generator, times(2)).generateFor(byteMappedClassCaptor.capture());
-    List<ByteMappedClass> byteMappedClasses = byteMappedClassCaptor.getAllValues();
+    List<MappedClass> mappedClasses = byteMappedClassCaptor.getAllValues();
 
-    assertThat(byteMappedClasses, hasSize(2));
+    assertThat(mappedClasses, hasSize(2));
 
-    Map<String, ByteMappedClass> mappedBySimpleName = getMapBySimpleName(byteMappedClasses);
+    Map<String, MappedClass> mappedBySimpleName = getMapBySimpleName(mappedClasses);
 
-    ByteMappedClass byteMappedClass = mappedBySimpleName.get(CoreProcessor.class.getSimpleName());
-    verifyParent(byteMappedClass, CoreProcessor.class);
-    Map<String, List<ByteMappingInfo>> map = byteMappedClass.getMappings().stream().collect(Collectors.groupingBy(ByteMappingInfo::getName));
+    MappedClass mappedClass = mappedBySimpleName.get(CoreProcessor.class.getSimpleName());
+    verifyParent(mappedClass, CoreProcessor.class);
+    Map<String, List<MappingInfo>> map = mappedClass.getMappings().stream().collect(Collectors.groupingBy(MappingInfo::getName));
 
-    verifyMappedByte(map.get("foo1").get(0), "INT", mappedByte1);
-    verifyMappedByte(map.get("foo2").get(0), "INT", mappedByte2);
+    verifyMapped(map.get("foo1").get(0), "INT", mappedByte1);
+    verifyMapped(map.get("foo2").get(0), "INT", mappedByte2);
 
-    byteMappedClass = mappedBySimpleName.get(ElementBuilder.class.getSimpleName());
-    verifyParent(byteMappedClass, ElementBuilder.class);
-    verifyMappedByte(byteMappedClass.getMappings().get(0), "INT", mappedByte3);
+    mappedClass = mappedBySimpleName.get(ElementBuilder.class.getSimpleName());
+    verifyParent(mappedClass, ElementBuilder.class);
+    verifyMapped(mappedClass.getMappings().get(0), "INT", mappedByte3);
   }
 
-  private Map<String, ByteMappedClass> getMapBySimpleName(List<ByteMappedClass> byteMappedClasses) {
-    Map<String, ByteMappedClass> map = new HashMap<>();
-    for (ByteMappedClass byteMappedClass : byteMappedClasses) {
-      map.put(byteMappedClass.getSimpleName(), byteMappedClass);
+  @Test
+  public void process_containsWordMapped_callsGenerator() {
+    // Given
+    CoreProcessor coreProcessor = new CoreProcessor(mappedClasses, generator);
+    coreProcessor.init(processingEnv);
+
+    MappedWord mappedWord = createMappedWord(0, "name", Endian.BIG_ENDIAN);
+    Element element = ElementBuilder.createMappedField("foo", TypeKind.INT, mappedWord, CoreProcessor.class);
+    Set<? extends Element> elements = Utils.setOf(element);
+    setupMappedWordElementsInRoundEnv(elements);
+
+    // When
+    coreProcessor.process(typeElements, roundEnv);
+
+    // Then
+    verify(generator).generateFor(any());
+  }
+
+
+  private Map<String, MappedClass> getMapBySimpleName(List<MappedClass> mappedClasses) {
+    Map<String, MappedClass> map = new HashMap<>();
+    for (MappedClass mappedClass : mappedClasses) {
+      map.put(mappedClass.getSimpleName(), mappedClass);
     }
     return map;
   }
 
-  private void verifyMappedByte(ByteMappingInfo byteMappingInfo, String type, MappedByte mappedByte) {
-    assertThat("ByteMapping Type", byteMappingInfo.getType(), is(type));
-    assertThat("ByteMapping Info", byteMappingInfo.getMappedByte(), is(mappedByte));
+  private void verifyMapped(MappingInfo mappingInfo, String type, Annotation annotation) {
+    assertThat("Mapping Type", mappingInfo.getType(), is(type));
+    assertThat("Mapping Info", mappingInfo.getAnnotation(), is(annotation));
   }
 
-  private void verifyParent(ByteMappedClass byteMappedClass, Class parentClass) {
-    assertThat("SimpleName", byteMappedClass.getSimpleName(), is(parentClass.getSimpleName()));
-    assertThat("QualifiedName", byteMappedClass.getQualifiedName(), is(parentClass.getName()));
-    assertThat("PackageName", byteMappedClass.getPackageName(), is(parentClass.getPackage().getName()));
-    assertThat(TypeName.get(byteMappedClass.getParentType()).toString(), is(parentClass.getName()));
+  private void verifyParent(MappedClass mappedClass, Class parentClass) {
+    assertThat("SimpleName", mappedClass.getSimpleName(), is(parentClass.getSimpleName()));
+    assertThat("QualifiedName", mappedClass.getQualifiedName(), is(parentClass.getName()));
+    assertThat("PackageName", mappedClass.getPackageName(), is(parentClass.getPackage().getName()));
+    assertThat(TypeName.get(mappedClass.getClassType()).toString(), is(parentClass.getName()));
   }
 
   @Test
   public void process_containsByteMapped_mappedClassesCleared() {
     // Given
-    CoreProcessor coreProcessor = new CoreProcessor(byteMappedClasses, generator);
+    CoreProcessor coreProcessor = new CoreProcessor(mappedClasses, generator);
     coreProcessor.init(processingEnv);
 
 
     MappedByte mappedByte = createMappedByte(0, "name");
     Element element = ElementBuilder.createMappedField("foo", TypeKind.INT, mappedByte, CoreProcessor.class);
     Set<? extends Element> elements = Utils.setOf(element);
-    setupElementsInRoundEnv(elements);
+    setupMappedByteElementsInRoundEnv(elements);
 
     // When
     coreProcessor.process(typeElements, roundEnv);
 
     // Then
-    assertThat(byteMappedClasses.getClasses(), hasSize(0));
+    assertThat(mappedClasses.getClasses(), hasSize(0));
   }
 
   @Test
   public void process_elementIsClass_errorMessage() {
     // Given
-    CoreProcessor coreProcessor = new CoreProcessor(byteMappedClasses, generator);
+    CoreProcessor coreProcessor = new CoreProcessor(mappedClasses, generator);
     coreProcessor.init(processingEnv);
 
     Element element = ElementBuilder.newElement(ElementKind.CLASS);
     Set<? extends Element> elements = Utils.setOf(element);
-    setupElementsInRoundEnv(elements);
+    setupMappedByteElementsInRoundEnv(elements);
 
     // When
     coreProcessor.process(typeElements, roundEnv);
 
     // Then
-    verify(messenger).printMessage(Diagnostic.Kind.ERROR, "Only fields can be annotated with @MappedByte", element);
+    verify(messenger).printMessage(Diagnostic.Kind.ERROR, "Only fields can be annotated with mapping annotation", element);
   }
 
-  private void setupElementsInRoundEnv(Set<? extends Element> elements) {
+  @Test
+  public void process_containsIncompatibleAnnotations_throwsExceptiob() {
+    // Given
+    CoreProcessor coreProcessor = new CoreProcessor(mappedClasses, generator);
+    coreProcessor.init(processingEnv);
+
+    MappedByte mappedByte = createMappedByte(0, "name");
+    Element element = ElementBuilder.createMappedField("foo", TypeKind.INT, mappedByte, CoreProcessor.class);
+    MappedWord mappedWord = createMappedWord(1,"name",Endian.BIG_ENDIAN);
+    when(element.getAnnotation(MappedWord.class)).thenReturn(mappedWord);
+
+    setupMappedByteElementsInRoundEnv(Utils.setOf(element));
+
+    // Then
+    expectedException.expect(IllegalStateException.class);
+
+    // When
+    coreProcessor.process(typeElements, roundEnv);
+  }
+
+  private void setupMappedByteElementsInRoundEnv(Set<? extends Element> elements) {
     doReturn(elements).when(roundEnv).getElementsAnnotatedWith(MappedByte.class);
+  }
+
+  private void setupMappedWordElementsInRoundEnv(Set<? extends Element> elements) {
+    doReturn(elements).when(roundEnv).getElementsAnnotatedWith(MappedWord.class);
   }
 
   private class TestingProcessingEnvironment implements ProcessingEnvironment {

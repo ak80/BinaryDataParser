@@ -1,9 +1,7 @@
 package org.ak80.ubyte.bdp;
 
 import org.ak80.ubyte.bdp.annotations.MappedByte;
-import org.ak80.ubyte.bdp.generator.FileWriter;
-import org.ak80.ubyte.bdp.processor.BdpProcessor;
-import org.ak80.ubyte.bdp.processor.CoreProcessor;
+import org.ak80.ubyte.bdp.annotations.MappedWord;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Answers;
@@ -23,6 +21,9 @@ import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
+
+//FIXME review this
 
 @RunWith(MockitoJUnitRunner.class)
 public class BinaryDataParserAnnotationsProcessorTest {
@@ -89,7 +90,10 @@ public class BinaryDataParserAnnotationsProcessorTest {
     Set<String> annotationTypes = processor.getSupportedAnnotationTypes();
 
     // Then
-    assertThat(annotationTypes, hasItems(MappedByte.class.getName()));
+    assertThat(annotationTypes, hasItems(
+        MappedByte.class.getName(),
+        MappedWord.class.getName()
+        ));
   }
 
   @Test
