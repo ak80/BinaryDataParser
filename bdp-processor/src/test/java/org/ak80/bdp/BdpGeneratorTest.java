@@ -26,8 +26,6 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.*;
 
-//FIXME review this
-
 @RunWith(MockitoJUnitRunner.class)
 public class BdpGeneratorTest {
 
@@ -145,7 +143,6 @@ public class BdpGeneratorTest {
     verifyMethodSignature(parseMethod);
     assertThat(parseMethod.code.toString(), is("simpleName.setField1((data[2] << BYTE_LENGTH) + data[1]);\n"));
   }
-
 
   @Test
   public void build_unknownAnnotation_throwsException() {

@@ -22,9 +22,6 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-
-//FIXME review this
-
 @RunWith(MockitoJUnitRunner.class)
 public class BinaryDataParserAnnotationsProcessorTest {
 

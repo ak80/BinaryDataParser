@@ -21,9 +21,6 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyVararg;
 import static org.mockito.Mockito.*;
 
-
-//FIXME review this
-
 @RunWith(MockitoJUnitRunner.class)
 public class BdpFileWriterTest {
 

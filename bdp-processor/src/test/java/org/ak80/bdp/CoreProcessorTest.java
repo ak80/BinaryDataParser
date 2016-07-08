@@ -38,8 +38,6 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 
-
-//FIXME review this
 @RunWith(MockitoJUnitRunner.class)
 public class CoreProcessorTest {
 
@@ -183,27 +181,6 @@ public class CoreProcessorTest {
     verify(generator).generateFor(any());
   }
 
-
-  private Map<String, MappedClass> getMapBySimpleName(List<MappedClass> mappedClasses) {
-    Map<String, MappedClass> map = new HashMap<>();
-    for (MappedClass mappedClass : mappedClasses) {
-      map.put(mappedClass.getSimpleName(), mappedClass);
-    }
-    return map;
-  }
-
-  private void verifyMapped(MappingInfo mappingInfo, String type, Annotation annotation) {
-    assertThat("Mapping Type", mappingInfo.getType(), is(type));
-    assertThat("Mapping Info", mappingInfo.getAnnotation(), is(annotation));
-  }
-
-  private void verifyParent(MappedClass mappedClass, Class parentClass) {
-    assertThat("SimpleName", mappedClass.getSimpleName(), is(parentClass.getSimpleName()));
-    assertThat("QualifiedName", mappedClass.getQualifiedName(), is(parentClass.getName()));
-    assertThat("PackageName", mappedClass.getPackageName(), is(parentClass.getPackage().getName()));
-    assertThat(TypeName.get(mappedClass.getClassType()).toString(), is(parentClass.getName()));
-  }
-
   @Test
   public void process_containsByteMapped_mappedClassesCleared() {
     // Given
@@ -266,6 +243,26 @@ public class CoreProcessorTest {
 
   private void setupMappedWordElementsInRoundEnv(Set<? extends Element> elements) {
     doReturn(elements).when(roundEnv).getElementsAnnotatedWith(MappedWord.class);
+  }
+
+  private Map<String, MappedClass> getMapBySimpleName(List<MappedClass> mappedClasses) {
+    Map<String, MappedClass> map = new HashMap<>();
+    for (MappedClass mappedClass : mappedClasses) {
+      map.put(mappedClass.getSimpleName(), mappedClass);
+    }
+    return map;
+  }
+
+  private void verifyMapped(MappingInfo mappingInfo, String type, Annotation annotation) {
+    assertThat("Mapping Type", mappingInfo.getType(), is(type));
+    assertThat("Mapping Info", mappingInfo.getAnnotation(), is(annotation));
+  }
+
+  private void verifyParent(MappedClass mappedClass, Class parentClass) {
+    assertThat("SimpleName", mappedClass.getSimpleName(), is(parentClass.getSimpleName()));
+    assertThat("QualifiedName", mappedClass.getQualifiedName(), is(parentClass.getName()));
+    assertThat("PackageName", mappedClass.getPackageName(), is(parentClass.getPackage().getName()));
+    assertThat(TypeName.get(mappedClass.getClassType()).toString(), is(parentClass.getName()));
   }
 
   private class TestingProcessingEnvironment implements ProcessingEnvironment {
