@@ -1,9 +1,9 @@
-package org.ak80.ubyte.bdp.testutils;
+package org.ak80.bdp.testutils;
 
 
-import org.ak80.ubyte.bdp.annotations.Endian;
-import org.ak80.ubyte.bdp.annotations.MappedByte;
-import org.ak80.ubyte.bdp.annotations.MappedWord;
+import org.ak80.bdp.annotations.Endian;
+import org.ak80.bdp.annotations.MappedByte;
+import org.ak80.bdp.annotations.MappedWord;
 
 import java.util.HashSet;
 import java.util.Set;

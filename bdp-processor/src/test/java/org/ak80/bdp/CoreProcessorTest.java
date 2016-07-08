@@ -1,11 +1,11 @@
-package org.ak80.ubyte.bdp;
+package org.ak80.bdp;
 
 import com.squareup.javapoet.TypeName;
-import org.ak80.ubyte.bdp.annotations.Endian;
-import org.ak80.ubyte.bdp.annotations.MappedByte;
-import org.ak80.ubyte.bdp.annotations.MappedWord;
-import org.ak80.ubyte.bdp.testutils.ElementBuilder;
-import org.ak80.ubyte.bdp.testutils.Utils;
+import org.ak80.bdp.annotations.Endian;
+import org.ak80.bdp.annotations.MappedByte;
+import org.ak80.bdp.annotations.MappedWord;
+import org.ak80.bdp.testutils.ElementBuilder;
+import org.ak80.bdp.testutils.Utils;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -31,8 +31,8 @@ import java.lang.annotation.Annotation;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static org.ak80.ubyte.bdp.testutils.Utils.createMappedByte;
-import static org.ak80.ubyte.bdp.testutils.Utils.createMappedWord;
+import static org.ak80.bdp.testutils.Utils.createMappedByte;
+import static org.ak80.bdp.testutils.Utils.createMappedWord;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertThat;
@@ -248,7 +248,7 @@ public class CoreProcessorTest {
 
     MappedByte mappedByte = createMappedByte(0, "name");
     Element element = ElementBuilder.createMappedField("foo", TypeKind.INT, mappedByte, CoreProcessor.class);
-    MappedWord mappedWord = createMappedWord(1,"name",Endian.BIG_ENDIAN);
+    MappedWord mappedWord = createMappedWord(1, "name", Endian.BIG_ENDIAN);
     when(element.getAnnotation(MappedWord.class)).thenReturn(mappedWord);
 
     setupMappedByteElementsInRoundEnv(Utils.setOf(element));

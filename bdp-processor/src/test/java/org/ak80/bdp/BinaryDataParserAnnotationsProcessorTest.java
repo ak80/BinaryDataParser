@@ -1,7 +1,7 @@
-package org.ak80.ubyte.bdp;
+package org.ak80.bdp;
 
-import org.ak80.ubyte.bdp.annotations.MappedByte;
-import org.ak80.ubyte.bdp.annotations.MappedWord;
+import org.ak80.bdp.annotations.MappedByte;
+import org.ak80.bdp.annotations.MappedWord;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Answers;
@@ -93,7 +93,7 @@ public class BinaryDataParserAnnotationsProcessorTest {
     assertThat(annotationTypes, hasItems(
         MappedByte.class.getName(),
         MappedWord.class.getName()
-        ));
+    ));
   }
 
   @Test

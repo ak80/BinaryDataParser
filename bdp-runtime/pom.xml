@@ -4,13 +4,13 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>BinaryDataParser</artifactId>
-        <groupId>org.ak80.ubyte.bdp</groupId>
+        <groupId>org.ak80.bdp</groupId>
         <version>0.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>bdp-runtime</artifactId>
-    
+
     <build>
         <plugins>
             <plugin>

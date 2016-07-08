@@ -1,4 +1,4 @@
-package org.ak80.ubyte.bdp.annotations;
+package org.ak80.bdp.annotations;
 
 /**
  * Defines the mapping of two bytes to a field
@@ -21,6 +21,7 @@ public @interface MappedWord {
 
   /**
    * Optional endianness, with {@link Endian#BIG_ENDIAN} as the default
+   *
    * @return the endian type
    */
   Endian endianess() default Endian.BIG_ENDIAN;

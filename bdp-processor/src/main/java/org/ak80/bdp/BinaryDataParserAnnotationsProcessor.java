@@ -1,8 +1,8 @@
-package org.ak80.ubyte.bdp;
+package org.ak80.bdp;
 
 import com.google.auto.service.AutoService;
-import org.ak80.ubyte.bdp.annotations.MappedByte;
-import org.ak80.ubyte.bdp.annotations.MappedWord;
+import org.ak80.bdp.annotations.MappedByte;
+import org.ak80.bdp.annotations.MappedWord;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.ProcessingEnvironment;

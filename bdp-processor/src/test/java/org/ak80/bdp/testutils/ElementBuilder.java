@@ -1,9 +1,8 @@
-package org.ak80.ubyte.bdp.testutils;
+package org.ak80.bdp.testutils;
 
 import com.squareup.javapoet.ClassName;
-import org.ak80.ubyte.bdp.annotations.MappedByte;
-import org.ak80.ubyte.bdp.annotations.MappedWord;
-import org.jetbrains.annotations.NotNull;
+import org.ak80.bdp.annotations.MappedByte;
+import org.ak80.bdp.annotations.MappedWord;
 
 import javax.lang.model.element.*;
 import javax.lang.model.type.TypeKind;

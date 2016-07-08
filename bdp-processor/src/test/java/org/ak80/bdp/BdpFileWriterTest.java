@@ -1,8 +1,7 @@
-package org.ak80.ubyte.bdp;
+package org.ak80.bdp;
 
 import com.squareup.javapoet.TypeSpec;
 import com.squareup.javapoet.TypeSpec.Builder;
-import org.ak80.ubyte.bdp.BdpFileWriter;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -29,7 +28,7 @@ import static org.mockito.Mockito.*;
 public class BdpFileWriterTest {
 
   private static final String className = "ClassName";
-  private static final String packageName = "org.ak80.ubyte.bdp";
+  private static final String packageName = "org.ak80.bdp";
 
   private Builder builder = TypeSpec.classBuilder(className).addModifiers(Modifier.PUBLIC);
 
@@ -64,7 +63,7 @@ public class BdpFileWriterTest {
     assertThat(stringList.get(1), is(packageName));
     assertThat(stringList.get(2), is(";"));
     assertThat(stringList.get(3), is("import static "));
-    assertThat(stringList.get(4), is("org.ak80.ubyte.bdp.BinaryUtils.*"));
+    assertThat(stringList.get(4), is("org.ak80.bdp.BinaryUtils.*"));
     assertThat(stringList.get(5), is(";"));
     assertThat(stringList.get(6), is("public"));
     assertThat(stringList.get(7), is(" "));

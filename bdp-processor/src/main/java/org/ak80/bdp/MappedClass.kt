@@ -1,4 +1,4 @@
-package org.ak80.ubyte.bdp
+package org.ak80.bdp
 
 import javax.lang.model.type.TypeMirror
 

@@ -1,4 +1,4 @@
-package org.ak80.ubyte.bdp;
+package org.ak80.bdp;
 
 /**
  * Utilities for

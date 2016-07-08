@@ -15,7 +15,6 @@
     <orderEntry type="library" name="Maven: org.jetbrains.kotlin:kotlin-stdlib:1.0.2-1" level="project" />
     <orderEntry type="library" name="Maven: org.jetbrains.kotlin:kotlin-runtime:1.0.2-1" level="project" />
     <orderEntry type="library" name="Maven: org.jetbrains.kotlin:kotlin-reflect:1.0.2-1" level="project" />
-    <orderEntry type="library" name="Maven: org.ak80.ubyte:uByte:0.1.0" level="project" />
     <orderEntry type="library" name="Maven: com.google.auto.service:auto-service:1.0-rc1" level="project" />
     <orderEntry type="library" name="Maven: com.google.guava:guava:16.0" level="project" />
     <orderEntry type="library" name="Maven: com.squareup:javapoet:1.7.0" level="project" />

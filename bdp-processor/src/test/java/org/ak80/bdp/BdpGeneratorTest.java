@@ -1,10 +1,11 @@
-package org.ak80.ubyte.bdp;
+package org.ak80.bdp;
 
 
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
-import org.ak80.ubyte.bdp.testutils.ElementBuilder;
-import org.ak80.ubyte.bdp.annotations.Endian;
+import org.ak80.bdp.annotations.Endian;
+import org.ak80.bdp.testutils.ElementBuilder;
+import org.ak80.bdp.testutils.Utils;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Rule;
 import org.junit.Test;
@@ -18,11 +19,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
-
 import java.lang.annotation.Annotation;
 
-import static org.ak80.ubyte.bdp.testutils.Utils.createMappedByte;
-import static org.ak80.ubyte.bdp.testutils.Utils.createMappedWord;
 import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -36,7 +34,7 @@ public class BdpGeneratorTest {
   @Rule
   public ExpectedException expectedException = ExpectedException.none();
 
-  private static final String packageName = "org.ak80.ubyte.bdp";
+  private static final String packageName = "org.ak80.bdp";
   private static final String className = "SimpleName";
   private static final String parserClassName = className + "Parser";
 
@@ -82,8 +80,8 @@ public class BdpGeneratorTest {
   public void build_parserMethod_withBuilder() {
     // Given
     BdpGenerator bdpGenerator = new BdpGenerator(fileWriter);
-    mappedClass.addMapping("field1", "Foo", createMappedByte(1, "name1"));
-    mappedClass.addMapping("field2", "Foo", createMappedWord(3, "name2", Endian.BIG_ENDIAN));
+    mappedClass.addMapping("field1", "Foo", Utils.createMappedByte(1, "name1"));
+    mappedClass.addMapping("field2", "Foo", Utils.createMappedWord(3, "name2", Endian.BIG_ENDIAN));
 
     // When
     bdpGenerator.generateFor(mappedClass);
@@ -92,8 +90,8 @@ public class BdpGeneratorTest {
     MethodSpec parseMethod = getTypeSpec().methodSpecs.get(METHOD_INDEX_PARSE);
     verifyMethodSignature(parseMethod);
     assertThat(parseMethod.code.toString(), is(""
-            +"simpleName.setField1(data[1]);\n"
-            +"simpleName.setField2((data[3] << BYTE_LENGTH) + data[4]);\n"
+        + "simpleName.setField1(data[1]);\n"
+        + "simpleName.setField2((data[3] << BYTE_LENGTH) + data[4]);\n"
     ));
   }
 
@@ -101,7 +99,7 @@ public class BdpGeneratorTest {
   public void mappedByte_parserMethod_withBuilder() {
     // Given
     BdpGenerator bdpGenerator = new BdpGenerator(fileWriter);
-    mappedClass.addMapping("field1", "Foo", createMappedByte(1, "name1"));
+    mappedClass.addMapping("field1", "Foo", Utils.createMappedByte(1, "name1"));
 
     // When
     bdpGenerator.generateFor(mappedClass);
@@ -120,15 +118,15 @@ public class BdpGeneratorTest {
 
   @Test
   public void mappedBigEndianWord_parserMethod_withBuilder() {
-      // Given
-      BdpGenerator bdpGenerator = new BdpGenerator(fileWriter);
-      mappedClass.addMapping("field1", "Foo", createMappedWord(1, "name1", Endian.BIG_ENDIAN));
+    // Given
+    BdpGenerator bdpGenerator = new BdpGenerator(fileWriter);
+    mappedClass.addMapping("field1", "Foo", Utils.createMappedWord(1, "name1", Endian.BIG_ENDIAN));
 
-      // When
-      bdpGenerator.generateFor(mappedClass);
+    // When
+    bdpGenerator.generateFor(mappedClass);
 
-      // Then
-      MethodSpec parseMethod = getTypeSpec().methodSpecs.get(METHOD_INDEX_PARSE);
+    // Then
+    MethodSpec parseMethod = getTypeSpec().methodSpecs.get(METHOD_INDEX_PARSE);
     verifyMethodSignature(parseMethod);
     assertThat(parseMethod.code.toString(), is("simpleName.setField1((data[1] << BYTE_LENGTH) + data[2]);\n"));
   }
@@ -137,7 +135,7 @@ public class BdpGeneratorTest {
   public void mappedLittleEndianWord_parserMethod_withBuilder() {
     // Given
     BdpGenerator bdpGenerator = new BdpGenerator(fileWriter);
-    mappedClass.addMapping("field1", "Foo", createMappedWord(1, "name1", Endian.LITTLE_ENDIAN));
+    mappedClass.addMapping("field1", "Foo", Utils.createMappedWord(1, "name1", Endian.LITTLE_ENDIAN));
 
     // When
     bdpGenerator.generateFor(mappedClass);

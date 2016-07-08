@@ -1,4 +1,4 @@
-package org.ak80.ubyte.bdp.annotations;
+package org.ak80.bdp.annotations;
 
 /**
  * Defines the mapping of one byte to a field

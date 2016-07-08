@@ -1,8 +1,8 @@
-package org.ak80.ubyte.bdp;
+package org.ak80.bdp;
 
-import org.ak80.ubyte.bdp.annotations.Endian;
-import org.ak80.ubyte.bdp.annotations.MappedByte;
-import org.ak80.ubyte.bdp.annotations.MappedWord;
+import org.ak80.bdp.annotations.Endian;
+import org.ak80.bdp.annotations.MappedByte;
+import org.ak80.bdp.annotations.MappedWord;
 
 public class TestClass {
 

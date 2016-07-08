@@ -1,4 +1,4 @@
-package org.ak80.ubyte.bdp;
+package org.ak80.bdp;
 
 import org.junit.Test;
 
@@ -12,10 +12,10 @@ public class BinaryDataParserTest {
     // Given
     TestClass testClass = new TestClass();
     TestClassParser parser = new TestClassParser();
-    int[] data = new int[] { 0x01, 0x02,0xff,0xff,0xff,0xff };
+    int[] data = new int[]{0x01, 0x02, 0xff, 0xff, 0xff, 0xff};
 
     // When
-    parser.parse(testClass,data);
+    parser.parse(testClass, data);
 
     // Then
     assertThat(testClass.getByte0(), is(1));
@@ -29,10 +29,10 @@ public class BinaryDataParserTest {
     TestClass testClass = new TestClass();
     TestClassParser parser = new TestClassParser();
 
-    int[] data = new int[] { 0xff, 0xff, 0x01, 0x02, 0x03, 0x04 };
+    int[] data = new int[]{0xff, 0xff, 0x01, 0x02, 0x03, 0x04};
 
     // When
-    parser.parse(testClass,data);
+    parser.parse(testClass, data);
 
     // Then
     assertThat(testClass.getWordBig(), is(0x0102));

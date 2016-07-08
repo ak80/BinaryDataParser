@@ -7,12 +7,12 @@ Also please be aware that there maybe some slight changes to the existing API
 
 ~~~~
         <dependency>
-            <groupId>org.ak80.ubyte.bdp</groupId>
+            <groupId>org.ak80.bdp</groupId>
             <artifactId>bdp-runtime</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.ak80.ubyte.bdp</groupId>
+            <groupId>org.ak80.bdp</groupId>
             <artifactId>bdp-processor</artifactId>
             <version>${project.version}</version>
             <optional>true</optional>

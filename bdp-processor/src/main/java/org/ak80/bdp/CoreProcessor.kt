@@ -1,9 +1,7 @@
-package org.ak80.ubyte.bdp
+package org.ak80.bdp
 
-import org.ak80.ubyte.bdp.annotations.MappedByte
-import org.ak80.ubyte.bdp.annotations.MappedWord
-import org.ak80.ubyte.bdp.Generator
-import org.ak80.ubyte.bdp.MappedClasses
+import org.ak80.bdp.annotations.MappedByte
+import org.ak80.bdp.annotations.MappedWord
 import javax.annotation.processing.Messager
 import javax.annotation.processing.ProcessingEnvironment
 import javax.annotation.processing.RoundEnvironment
@@ -102,14 +100,14 @@ class CoreProcessor(private val mappedClasses: MappedClasses, private val genera
     private fun getAnnotation(element: Element): Annotation {
         var annotations: Set<Annotation> = mutableSetOf()
 
-        for(annotationClass in fieldMappingAnnotations) {
+        for (annotationClass in fieldMappingAnnotations) {
             var annotation = element.getAnnotation(annotationClass)
-            if(annotation != null) {
-               annotations = annotations.plus(annotation)
+            if (annotation != null) {
+                annotations = annotations.plus(annotation)
             }
         }
 
-        if(annotations.size > 1) {
+        if (annotations.size > 1) {
             throw IllegalStateException("Only one mapping annotation allowed for element ${element.simpleName} but found: $annotations")
         }
         return annotations.single()
