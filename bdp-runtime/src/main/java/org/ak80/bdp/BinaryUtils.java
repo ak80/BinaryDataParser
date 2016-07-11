@@ -6,5 +6,6 @@ package org.ak80.bdp;
 public abstract class BinaryUtils {
 
   public static final int BYTE_LENGTH = 8;
+  public static final int BYTE_MASK = 0x00ff;
 
 }
