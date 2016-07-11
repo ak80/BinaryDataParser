@@ -108,11 +108,6 @@ public class BdpGeneratorTest {
     assertThat(parseMethod.code.toString(), is("simpleName.setField1(data[1]);\n"));
   }
 
-  private void verifyMethodSignature(MethodSpec parseMethod) {
-    assertThat(parseMethod.name, is("parse"));
-    assertThat(parseMethod.parameters.get(0).toString(), is("java.lang.String simpleName"));
-    assertThat(parseMethod.parameters.get(1).toString(), is("int[] data"));
-  }
 
   @Test
   public void mappedBigEndianWord_parserMethod_withBuilder() {
@@ -157,11 +152,16 @@ public class BdpGeneratorTest {
     bdpGenerator.generateFor(mappedClass);
   }
 
-  @NotNull
   private TypeSpec getTypeSpec() {
     verify(fileWriter).write(any(), typeSpecBuilderCaptor.capture());
     TypeSpec.Builder builder = typeSpecBuilderCaptor.getValue();
     return builder.build();
+  }
+
+  private void verifyMethodSignature(MethodSpec parseMethod) {
+    assertThat(parseMethod.name, is("parse"));
+    assertThat(parseMethod.parameters.get(0).toString(), is("java.lang.String simpleName"));
+    assertThat(parseMethod.parameters.get(1).toString(), is("int[] data"));
   }
 
 
