@@ -40,7 +40,7 @@ public class BinaryDataParserTest {
   }
 
   @Test
-  public void serialize_byteMapping_parserClassWithSerializeeMethod() {
+  public void serialize_byteMapping_parserClassWithSerializeMethod() {
     // Given
     TestClassParser parser = new TestClassParser();
     int[] data = new int[]{0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
@@ -57,4 +57,22 @@ public class BinaryDataParserTest {
     assertThat(data, is(dataExpected));
   }
 
+
+  @Test
+  public void serialize_wordMapping_parserClassWithSerializeMethod() {
+    // Given
+    TestClassParser parser = new TestClassParser();
+    int[] data = new int[]{0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+    int[] dataExpected = new int[]{0x00, 0x00, 0x12, 0x34, 0x78, 0x56};
+
+    TestClass testClass = new TestClass();
+    testClass.setWordBig(0x1234);
+    testClass.setWordLittle(0x5678);
+
+    // When
+    parser.serialize(testClass, data);
+
+    // Then
+    assertThat(data, is(dataExpected));
+  }
 }

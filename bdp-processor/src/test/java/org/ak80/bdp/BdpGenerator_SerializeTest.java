@@ -58,7 +58,7 @@ public class BdpGenerator_SerializeTest {
     verifyMethodSignature(parseMethod, bdpGenerator.getSerializeMethodPrefix());
     assertThat(parseMethod.code.toString(), is("" +
         "data[1] = simpleName.getField1();\n" +
-        "data[3] = simpleName.getField2() << BYTE_LENGTH;\n" +
+        "data[3] = (simpleName.getField2() >>> BYTE_LENGTH) & BYTE_MASK;\n" +
         "data[4] = simpleName.getField2() & BYTE_MASK;\n"
     ));
   }
@@ -91,9 +91,9 @@ public class BdpGenerator_SerializeTest {
     // Then
     MethodSpec parseMethod = getTypeSpec(fileWriter, typeSpecBuilderCaptor).methodSpecs.get(METHOD_INDEX_SERIALIZE);
     verifyMethodSignature(parseMethod, bdpGenerator.getSerializeMethodPrefix());
-    assertThat(parseMethod.code.toString(), is(
-        "data[1] = simpleName.getField1() << BYTE_LENGTH;\n" +
-            "data[2] = simpleName.getField1() & BYTE_MASK;\n"));
+    assertThat(parseMethod.code.toString(), is(""+
+        "data[1] = (simpleName.getField1() >>> BYTE_LENGTH) & BYTE_MASK;\n" +
+        "data[2] = simpleName.getField1() & BYTE_MASK;\n"));
   }
 
   @Test
@@ -108,9 +108,9 @@ public class BdpGenerator_SerializeTest {
     // Then
     MethodSpec parseMethod = getTypeSpec(fileWriter, typeSpecBuilderCaptor).methodSpecs.get(METHOD_INDEX_SERIALIZE);
     verifyMethodSignature(parseMethod, bdpGenerator.getSerializeMethodPrefix());
-    assertThat(parseMethod.code.toString(), is(
-        "data[2] = simpleName.getField1() & BYTE_MASK;\n" +
-            "data[1] = simpleName.getField1() << BYTE_LENGTH;\n"));
+    assertThat(parseMethod.code.toString(), is(""+
+        "data[1] = simpleName.getField1() & BYTE_MASK;\n" +
+        "data[2] = (simpleName.getField1() >>> BYTE_LENGTH) & BYTE_MASK;\n"));
   }
 
 

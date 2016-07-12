@@ -113,11 +113,11 @@ private class MappingGenerator() {
 
     fun getSerializeWordMapping(mappingInfo: MappedWord, getterName: String): String {
         if (mappingInfo.endianess.equals(Endian.BIG_ENDIAN)) {
-            return "data[${mappingInfo.index}] = $getterName() << BYTE_LENGTH;\n" +
+            return "data[${mappingInfo.index}] = ($getterName() >>> BYTE_LENGTH) & BYTE_MASK;\n" +
                     "data[${mappingInfo.index + 1}] = $getterName() & BYTE_MASK;\n"
         } else {
-            return "data[${mappingInfo.index + 1}] = $getterName() & BYTE_MASK;\n" +
-                    "data[${mappingInfo.index}] = $getterName() << BYTE_LENGTH;\n"
+            return "data[${mappingInfo.index}] = $getterName() & BYTE_MASK;\n" +
+                    "data[${mappingInfo.index + 1}] = ($getterName() >>> BYTE_LENGTH) & BYTE_MASK;\n"
         }
     }
 }
