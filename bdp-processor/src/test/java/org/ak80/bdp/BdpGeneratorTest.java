@@ -32,8 +32,6 @@ public class BdpGeneratorTest {
   private static final String className = "SimpleName";
   private static final String parserClassName = className + "Parser";
 
-  private static final int METHOD_INDEX_PARSE = 0;
-
   @Mock
   private FileWriter fileWriter;
 

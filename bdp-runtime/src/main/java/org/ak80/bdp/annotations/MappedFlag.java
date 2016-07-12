@@ -1,7 +1,9 @@
 package org.ak80.bdp.annotations;
 
+import org.ak80.bdp.Bits;
+
 /**
- * Defines the mapping of one byte to a field
+ * Defines the mapping of one bit flag to a field
  */
 public @interface MappedFlag {
 
@@ -18,5 +20,12 @@ public @interface MappedFlag {
    * @return the name
    */
   String name() default "";
+
+  /**
+   * The bit to map in the byte
+   *
+   * @return the bit
+   */
+  Bits bit();
 
 }

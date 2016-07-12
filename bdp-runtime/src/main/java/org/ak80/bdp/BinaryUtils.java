@@ -1,7 +1,7 @@
 package org.ak80.bdp;
 
 /**
- * Utilities for
+ * Utilities for binary handling
  */
 public abstract class BinaryUtils {
 

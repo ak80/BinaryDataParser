@@ -53,7 +53,7 @@ public class BdpFileWriterTest {
     fileWriter.write(packageName, builder);
 
     // Then
-    verify(writer, times(13)).append(stringCaptor.capture());
+    verify(writer, times(16)).append(stringCaptor.capture());
 
     List<String> stringList = stringCaptor.getAllValues();
     assertThat(stringList.get(0), is("package "));
@@ -62,13 +62,16 @@ public class BdpFileWriterTest {
     assertThat(stringList.get(3), is("import static "));
     assertThat(stringList.get(4), is("org.ak80.bdp.BinaryUtils.*"));
     assertThat(stringList.get(5), is(";"));
-    assertThat(stringList.get(6), is("public"));
-    assertThat(stringList.get(7), is(" "));
-    assertThat(stringList.get(8), is("class"));
-    assertThat(stringList.get(9), is(" "));
-    assertThat(stringList.get(10), is(className));
-    assertThat(stringList.get(11), is(" {"));
-    assertThat(stringList.get(12), is("}"));
+    assertThat(stringList.get(6), is("import static "));
+    assertThat(stringList.get(7), is("org.ak80.bdp.Bits.*"));
+    assertThat(stringList.get(8), is(";"));
+    assertThat(stringList.get(9), is("public"));
+    assertThat(stringList.get(10), is(" "));
+    assertThat(stringList.get(11), is("class"));
+    assertThat(stringList.get(12), is(" "));
+    assertThat(stringList.get(13), is(className));
+    assertThat(stringList.get(14), is(" {"));
+    assertThat(stringList.get(15), is("}"));
   }
 
 

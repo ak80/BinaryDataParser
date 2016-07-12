@@ -3,6 +3,7 @@ package org.ak80.bdp
 import com.squareup.javapoet.*
 import org.ak80.bdp.annotations.Endian
 import org.ak80.bdp.annotations.MappedByte
+import org.ak80.bdp.annotations.MappedFlag
 import org.ak80.bdp.annotations.MappedWord
 import javax.annotation.processing.Filer
 import javax.lang.model.element.Modifier
@@ -61,8 +62,7 @@ class BdpGenerator(private var fileWriter: FileWriter) : Generator {
 
     private fun createParseMapping(mappingInfo: MappingInfo): String {
         var setterName = getSetterName(mappingInfo)
-        var code = mappingGenerator.getParseCode(mappingInfo)
-        return "$setterName($code);\n"
+        return mappingGenerator.getParseCode(mappingInfo, setterName)
     }
 
     private fun createSerializeMapping(mappingInfo: MappingInfo): String {
@@ -79,30 +79,38 @@ class BdpGenerator(private var fileWriter: FileWriter) : Generator {
 
 private class MappingGenerator() {
 
-    fun getParseCode(mappingInfo: MappingInfo): String {
+    fun getParseCode(mappingInfo: MappingInfo, setterName: String): String {
         when (mappingInfo.annotation) {
-            is MappedByte -> return getParseByteMapping(mappingInfo.annotation)
-            is MappedWord -> return getParseWordMapping(mappingInfo.annotation)
+            is MappedByte -> return getParseByteMapping(mappingInfo.annotation, setterName)
+            is MappedWord -> return getParseWordMapping(mappingInfo.annotation, setterName)
+            is MappedFlag -> return getParseFlagMapping(mappingInfo.annotation, setterName)
             else -> throw IllegalStateException("Mapping ${mappingInfo.annotation.javaClass.name} is not known")
         }
     }
 
-    fun getParseByteMapping(mappingInfo: MappedByte): String {
-        return "data[${mappingInfo.index}]"
+    fun getParseByteMapping(mappingInfo: MappedByte, setterName: String): String {
+        return "$setterName(data[${mappingInfo.index}]);\n"
     }
 
-    fun getParseWordMapping(mappingInfo: MappedWord): String {
+    fun getParseWordMapping(mappingInfo: MappedWord, setterName: String): String {
+        var code: String
         if (mappingInfo.endianess.equals(Endian.BIG_ENDIAN)) {
-            return "(data[${mappingInfo.index}] << BYTE_LENGTH) + data[${mappingInfo.index + 1}]"
+            code = "(data[${mappingInfo.index}] << BYTE_LENGTH) + data[${mappingInfo.index + 1}]"
         } else {
-            return "(data[${mappingInfo.index + 1}] << BYTE_LENGTH) + data[${mappingInfo.index}]"
+            code = "(data[${mappingInfo.index + 1}] << BYTE_LENGTH) + data[${mappingInfo.index}]"
         }
+        return "$setterName($code);\n"
+    }
+
+    fun getParseFlagMapping(mappingInfo: MappedFlag, setterName: String): String {
+        return "$setterName((data[${mappingInfo.index}] & ${mappingInfo.bit.name}.getMask()) == ${mappingInfo.bit.name}.getMask());\n"
     }
 
     fun getSerializeCode(mappingInfo: MappingInfo, getterName: String): String {
         when (mappingInfo.annotation) {
             is MappedByte -> return getSerializeByteMapping(mappingInfo.annotation, getterName)
             is MappedWord -> return getSerializeWordMapping(mappingInfo.annotation, getterName)
+            is MappedFlag -> return getSerializeFlagMapping(mappingInfo.annotation, getterName)
             else -> throw IllegalStateException("Mapping ${mappingInfo.annotation.javaClass.name} is not known")
         }
     }
@@ -119,6 +127,11 @@ private class MappingGenerator() {
             return "data[${mappingInfo.index}] = $getterName() & BYTE_MASK;\n" +
                     "data[${mappingInfo.index + 1}] = ($getterName() >>> BYTE_LENGTH) & BYTE_MASK;\n"
         }
+    }
+
+    fun getSerializeFlagMapping(mappingInfo: MappedFlag, getterName: String): String {
+        val flagGetterName = getterName.replace("get", "is")
+        return "if($flagGetterName()) { data[${mappingInfo.index}] = data[${mappingInfo.index}] | ${mappingInfo.bit}.getMask(); } else { data[${mappingInfo.index}] = data[${mappingInfo.index}] & ~${mappingInfo.bit}.getMask(); }\n"
     }
 }
 
@@ -159,6 +172,7 @@ class BdpFileWriter() : FileWriter {
         val javaFile = JavaFile
                 .builder(packageName, parserClass)
                 .addStaticImport(BinaryUtils::class.java, "*")
+                .addStaticImport(Bits::class.java, "*")
                 .build()
         javaFile.writeTo(filer);
     }

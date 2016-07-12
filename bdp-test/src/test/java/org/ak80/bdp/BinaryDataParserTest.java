@@ -12,7 +12,7 @@ public class BinaryDataParserTest {
     // Given
     TestClass testClass = new TestClass();
     TestClassParser parser = new TestClassParser();
-    int[] data = new int[]{0x01, 0x02, 0xff, 0xff, 0xff, 0xff};
+    int[] data = new int[]{0x01, 0x02, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff};
 
     // When
     parser.parse(testClass, data);
@@ -22,14 +22,13 @@ public class BinaryDataParserTest {
     assertThat(testClass.getByte1(), is(2));
   }
 
-
   @Test
   public void parse_wordMapping_parserClassWithParseMethod() {
     // Given
     TestClass testClass = new TestClass();
     TestClassParser parser = new TestClassParser();
 
-    int[] data = new int[]{0xff, 0xff, 0x01, 0x02, 0x03, 0x04};
+    int[] data = new int[]{0xff, 0xff, 0x01, 0x02, 0x03, 0x04, 0xff, 0xff};
 
     // When
     parser.parse(testClass, data);
@@ -43,8 +42,8 @@ public class BinaryDataParserTest {
   public void serialize_byteMapping_parserClassWithSerializeMethod() {
     // Given
     TestClassParser parser = new TestClassParser();
-    int[] data = new int[]{0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
-    int[] dataExpected = new int[]{0x01, 0x02, 0x00, 0x00, 0x00, 0x00};
+    int[] data = new int[]{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+    int[] dataExpected = new int[]{0x01, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 
     TestClass testClass = new TestClass();
     testClass.setByte0(1);
@@ -57,13 +56,12 @@ public class BinaryDataParserTest {
     assertThat(data, is(dataExpected));
   }
 
-
   @Test
   public void serialize_wordMapping_parserClassWithSerializeMethod() {
     // Given
     TestClassParser parser = new TestClassParser();
-    int[] data = new int[]{0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
-    int[] dataExpected = new int[]{0x00, 0x00, 0x12, 0x34, 0x78, 0x56};
+    int[] data = new int[]{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+    int[] dataExpected = new int[]{0x00, 0x00, 0x12, 0x34, 0x78, 0x56, 0x00, 0x00};
 
     TestClass testClass = new TestClass();
     testClass.setWordBig(0x1234);
@@ -75,4 +73,38 @@ public class BinaryDataParserTest {
     // Then
     assertThat(data, is(dataExpected));
   }
+
+  @Test
+  public void parse_flagMapping_parserClassWithParseMethod() {
+    // Given
+    TestClass testClass = new TestClass();
+    TestClassParser parser = new TestClassParser();
+    int[] data = new int[]{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0b00010000};
+
+    // When
+    parser.parse(testClass, data);
+
+    // Then
+    assertThat(testClass.isFlag0(), is(false));
+    assertThat(testClass.isFlag1(), is(true));
+  }
+
+  @Test
+  public void serialize_flagMapping_parserClassWithParseMethod() {
+    // Given
+    TestClassParser parser = new TestClassParser();
+    int[] data = new int[]{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+    int[] dataExpected = new int[]{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0b00010000};
+
+    // When
+    TestClass testClass = new TestClass();
+    testClass.setFlag1(true);
+
+    // When
+    parser.serialize(testClass, data);
+
+    // Then
+    assertThat(data, is(dataExpected));
+  }
+
 }

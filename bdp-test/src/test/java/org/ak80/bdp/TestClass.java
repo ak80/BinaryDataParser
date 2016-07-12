@@ -2,6 +2,7 @@ package org.ak80.bdp;
 
 import org.ak80.bdp.annotations.Endian;
 import org.ak80.bdp.annotations.MappedByte;
+import org.ak80.bdp.annotations.MappedFlag;
 import org.ak80.bdp.annotations.MappedWord;
 
 public class TestClass {
@@ -17,6 +18,12 @@ public class TestClass {
 
   @MappedWord(index = 4, name = "word little", endianess = Endian.LITTLE_ENDIAN)
   private int wordLittle;
+
+  @MappedFlag(index = 6, bit = Bits.BIT_0, name = "flag 0")
+  private boolean flag0;
+
+  @MappedFlag(index = 6, bit = Bits.BIT_4, name = "flag 1")
+  private boolean flag1;
 
   public int getByte0() {
     return byte0;
@@ -49,4 +56,21 @@ public class TestClass {
   public void setWordLittle(int wordLittle) {
     this.wordLittle = wordLittle;
   }
+
+  public boolean isFlag0() {
+    return flag0;
+  }
+
+  public void setFlag0(boolean flag0) {
+    this.flag0 = flag0;
+  }
+
+  public boolean isFlag1() {
+    return flag1;
+  }
+
+  public void setFlag1(boolean flag1) {
+    this.flag1 = flag1;
+  }
+
 }

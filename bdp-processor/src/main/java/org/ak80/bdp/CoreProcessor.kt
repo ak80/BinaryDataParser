@@ -1,6 +1,7 @@
 package org.ak80.bdp
 
 import org.ak80.bdp.annotations.MappedByte
+import org.ak80.bdp.annotations.MappedFlag
 import org.ak80.bdp.annotations.MappedWord
 import javax.annotation.processing.Messager
 import javax.annotation.processing.ProcessingEnvironment
@@ -39,7 +40,7 @@ interface BdpProcessor {
  */
 class CoreProcessor(private val mappedClasses: MappedClasses, private val generator: Generator) : BdpProcessor {
 
-    var fieldMappingAnnotations = setOf(MappedByte::class.java, MappedWord::class.java)
+    var fieldMappingAnnotations = setOf(MappedByte::class.java, MappedWord::class.java, MappedFlag::class.java)
     var processingEnvironment: ProcessingEnvironment? = null
 
     private val messager: Messager by lazy {
@@ -59,6 +60,11 @@ class CoreProcessor(private val mappedClasses: MappedClasses, private val genera
         }
 
         for (annotatedElement in roundEnv.getElementsAnnotatedWith(MappedWord::class.java)) {
+            exit = processMappedField(annotatedElement)
+            if (exit) break
+        }
+
+        for (annotatedElement in roundEnv.getElementsAnnotatedWith(MappedFlag::class.java)) {
             exit = processMappedField(annotatedElement)
             if (exit) break
         }
@@ -125,7 +131,6 @@ class CoreProcessor(private val mappedClasses: MappedClasses, private val genera
 
     private fun getClassPackage(fullName: String, simpleName: String): String {
         return fullName.subSequence(0, fullName.length - simpleName.length - 1).toString()
-
     }
 
     private fun error(element: Element, message: String) {

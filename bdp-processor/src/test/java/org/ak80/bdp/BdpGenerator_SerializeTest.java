@@ -91,7 +91,7 @@ public class BdpGenerator_SerializeTest {
     // Then
     MethodSpec parseMethod = getTypeSpec(fileWriter, typeSpecBuilderCaptor).methodSpecs.get(METHOD_INDEX_SERIALIZE);
     verifyMethodSignature(parseMethod, bdpGenerator.getSerializeMethodPrefix());
-    assertThat(parseMethod.code.toString(), is(""+
+    assertThat(parseMethod.code.toString(), is("" +
         "data[1] = (simpleName.getField1() >>> BYTE_LENGTH) & BYTE_MASK;\n" +
         "data[2] = simpleName.getField1() & BYTE_MASK;\n"));
   }
@@ -108,10 +108,27 @@ public class BdpGenerator_SerializeTest {
     // Then
     MethodSpec parseMethod = getTypeSpec(fileWriter, typeSpecBuilderCaptor).methodSpecs.get(METHOD_INDEX_SERIALIZE);
     verifyMethodSignature(parseMethod, bdpGenerator.getSerializeMethodPrefix());
-    assertThat(parseMethod.code.toString(), is(""+
+    assertThat(parseMethod.code.toString(), is("" +
         "data[1] = simpleName.getField1() & BYTE_MASK;\n" +
         "data[2] = (simpleName.getField1() >>> BYTE_LENGTH) & BYTE_MASK;\n"));
   }
 
+  @Test
+  public void mappedFlag_serializeMethod_withBuilder() {
+    // Given
+    BdpGenerator bdpGenerator = new BdpGenerator(fileWriter);
+    mappedClass.addMapping("field1", "Foo", Utils.createMappedFlag(1, Bits.BIT_3, "name1"));
+
+    // When
+    bdpGenerator.generateFor(mappedClass);
+
+    // Then
+    MethodSpec parseMethod = getTypeSpec(fileWriter, typeSpecBuilderCaptor).methodSpecs.get(METHOD_INDEX_SERIALIZE);
+    verifyMethodSignature(parseMethod, bdpGenerator.getSerializeMethodPrefix());
+    assertThat(parseMethod.code.toString(), is("if(simpleName.isField1()) {" +
+        " data[1] = data[1] | BIT_3.getMask(); " +
+        "} else {" +
+        " data[1] = data[1] & ~BIT_3.getMask(); }\n"));
+  }
 
 }
