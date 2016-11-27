@@ -63,7 +63,7 @@ public class BdpFileWriterTest {
     assertThat(stringList.get(4), is("org.ak80.bdp.BinaryUtils.*"));
     assertThat(stringList.get(5), is(";"));
     assertThat(stringList.get(6), is("import static "));
-    assertThat(stringList.get(7), is("org.ak80.bdp.Bits.*"));
+    assertThat(stringList.get(7), is("org.ak80.bdp.Bit.*"));
     assertThat(stringList.get(8), is(";"));
     assertThat(stringList.get(9), is("public"));
     assertThat(stringList.get(10), is(" "));
