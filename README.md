@@ -1,4 +1,6 @@
-# BinaryDataParser
+# BinaryDataParser [![Travis master](https://img.shields.io/travis/ak80/BinaryDataParser/master.svg?maxAge=3600)](https://travis-ci.org/ak80/BinaryDataParser) [![GitHub license](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg?style=flat)](http://www.apache.org/licenses/LICENSE-2.0)
+
+
 BinaryDataParser helps to parse binary data into POJOs. It generates custom parsers from annotations.
 
 ## Status
