@@ -7,7 +7,7 @@
     <groupId>org.ak80.bdp</groupId>
     <artifactId>BinaryDataParser</artifactId>
     <packaging>pom</packaging>
-    <version>0.1-SNAPSHOT</version>
+    <version>${global.version}</version>
     <modules>
         <module>bdp-runtime</module>
         <module>bdp-processor</module>
@@ -45,6 +45,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <global.version>1.0.1</global.version>
     </properties>
 
     <build>
@@ -70,11 +71,14 @@
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.eluder.coveralls</groupId>
                 <artifactId>coveralls-maven-plugin</artifactId>
-                <version>4.3.0</version>
+                <version>4.2.0</version>
             </plugin>
         </plugins>
     </build>
