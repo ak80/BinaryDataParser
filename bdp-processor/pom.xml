@@ -26,6 +26,12 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
+            <groupId>org.ak80.bdp</groupId>
+            <artifactId>bdp-runtime</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-stdlib</artifactId>
             <version>${kotlin.version}</version>
@@ -62,12 +68,6 @@
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-all</artifactId>
             <version>${hamcrest.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.ak80.bdp</groupId>
-            <artifactId>bdp-runtime</artifactId>
-            <version>0.1-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
