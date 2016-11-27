@@ -3,7 +3,7 @@ package org.ak80.bdp;
 /**
  * Bit positions
  */
-public enum Bits {
+public enum Bit {
 
   BIT_0(0b00000001),
   BIT_1(0b00000010),
@@ -14,10 +14,9 @@ public enum Bits {
   BIT_6(0b01000000),
   BIT_7(0b10000000),;
 
-
   private final int mask;
 
-  Bits(int mask) {
+  Bit(int mask) {
     this.mask = mask;
   }
 

@@ -1,6 +1,6 @@
 package org.ak80.bdp.annotations;
 
-import org.ak80.bdp.Bits;
+import org.ak80.bdp.Bit;
 
 /**
  * Defines the mapping of one bit flag to a field
@@ -26,6 +26,6 @@ public @interface MappedFlag {
    *
    * @return the bit
    */
-  Bits bit();
+  Bit bit();
 
 }

@@ -117,7 +117,7 @@ public class BdpGenerator_SerializeTest {
   public void mappedFlag_serializeMethod_withBuilder() {
     // Given
     BdpGenerator bdpGenerator = new BdpGenerator(fileWriter);
-    mappedClass.addMapping("field1", "Foo", Utils.createMappedFlag(1, Bits.BIT_3, "name1"));
+    mappedClass.addMapping("field1", "Foo", Utils.createMappedFlag(1, Bit.BIT_3, "name1"));
 
     // When
     bdpGenerator.generateFor(mappedClass);

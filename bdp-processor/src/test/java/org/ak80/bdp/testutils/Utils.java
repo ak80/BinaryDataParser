@@ -1,7 +1,7 @@
 package org.ak80.bdp.testutils;
 
 
-import org.ak80.bdp.Bits;
+import org.ak80.bdp.Bit;
 import org.ak80.bdp.annotations.Endian;
 import org.ak80.bdp.annotations.MappedByte;
 import org.ak80.bdp.annotations.MappedFlag;
@@ -38,7 +38,7 @@ public class Utils {
     return mappedWord;
   }
 
-  public static MappedFlag createMappedFlag(int index, Bits bit, String name) {
+  public static MappedFlag createMappedFlag(int index, Bit bit, String name) {
     MappedFlag mappedFlag = mock(MappedFlag.class);
     when(mappedFlag.index()).thenReturn(index);
     when(mappedFlag.name()).thenReturn(name);

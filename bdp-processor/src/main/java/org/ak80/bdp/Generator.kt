@@ -172,7 +172,7 @@ class BdpFileWriter() : FileWriter {
         val javaFile = JavaFile
                 .builder(packageName, parserClass)
                 .addStaticImport(BinaryUtils::class.java, "*")
-                .addStaticImport(Bits::class.java, "*")
+                .addStaticImport(Bit::class.java, "*")
                 .build()
         javaFile.writeTo(filer);
     }

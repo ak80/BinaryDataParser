@@ -19,10 +19,10 @@ public class TestClass {
   @MappedWord(index = 4, name = "word little", endianess = Endian.LITTLE_ENDIAN)
   private int wordLittle;
 
-  @MappedFlag(index = 6, bit = Bits.BIT_0, name = "flag 0")
+  @MappedFlag(index = 6, bit = Bit.BIT_0, name = "flag 0")
   private boolean flag0;
 
-  @MappedFlag(index = 6, bit = Bits.BIT_4, name = "flag 1")
+  @MappedFlag(index = 6, bit = Bit.BIT_4, name = "flag 1")
   private boolean flag1;
 
   public int getByte0() {
