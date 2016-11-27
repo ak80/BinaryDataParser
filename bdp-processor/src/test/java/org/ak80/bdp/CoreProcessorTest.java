@@ -38,6 +38,7 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 
+@SuppressWarnings("PMD.MethodNamingConventions")
 @RunWith(MockitoJUnitRunner.class)
 public class CoreProcessorTest {
 

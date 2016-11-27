@@ -22,6 +22,7 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+@SuppressWarnings("PMD.MethodNamingConventions")
 @RunWith(MockitoJUnitRunner.class)
 public class BinaryDataParserAnnotationsProcessorTest {
 

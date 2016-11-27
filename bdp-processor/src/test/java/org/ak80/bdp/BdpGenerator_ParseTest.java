@@ -23,6 +23,7 @@ import static org.ak80.bdp.testutils.Verificator.verifyMethodSignature;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
+@SuppressWarnings("PMD.MethodNamingConventions")
 @RunWith(MockitoJUnitRunner.class)
 public class BdpGenerator_ParseTest {
 

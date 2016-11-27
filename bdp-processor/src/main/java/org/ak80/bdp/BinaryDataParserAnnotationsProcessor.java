@@ -20,9 +20,9 @@ import java.util.Set;
 @AutoService(Processor.class)
 public class BinaryDataParserAnnotationsProcessor extends AbstractProcessor {
 
-  FileWriter bdpWriter = new BdpFileWriter();
-  Generator bdpGenerator = new BdpGenerator(bdpWriter);
-  BdpProcessor bdpProcessor = new CoreProcessor(new MappedClasses(), bdpGenerator);
+  protected FileWriter bdpWriter = new BdpFileWriter();
+  protected Generator bdpGenerator = new BdpGenerator(bdpWriter);
+  protected BdpProcessor bdpProcessor = new CoreProcessor(new MappedClasses(), bdpGenerator);
 
   @Override
   public synchronized void init(ProcessingEnvironment processingEnv) {
