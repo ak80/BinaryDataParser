@@ -1,9 +1,11 @@
 # BinaryDataParser [![Travis master](https://img.shields.io/travis/ak80/BinaryDataParser/master.svg?maxAge=3600)](https://travis-ci.org/ak80/BinaryDataParser) [![Coverage Status](https://coveralls.io/repos/github/ak80/BinaryDataParser/badge.svg?maxAge=3600)](https://coveralls.io/github/ak80/BinaryDataParser?branch=master) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/34e46b5a77694ea2a11227b915235218)](https://www.codacy.com/app/josef-koch/BinaryDataParser?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ak80/BinaryDataParser&amp;utm_campaign=Badge_Grade) [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.ak80.bdp/BinaryDataParser/badge.svg?style=flat-square)](https://maven-badges.herokuapp.com/maven-central/org.ak80.bdp/BinaryDataParser/) [![GitHub license](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg?style=flat)](http://www.apache.org/licenses/LICENSE-2.0)
 
-BinaryDataParser helps to parse binary data into POJOs. It generates custom parsers from annotations.
+BinaryDataParser helps to parse and serialize binary data into POJOs. It generates custom parsers from annotations. It works by defining mappings on fields in an object with annotations.
 
 ## Status
-THIS PROJECT IS CURRENTLY A PROTOTYPE. Everything that works, works but some of the functionality is missing.
+THIS PROJECT IS CURRENTLY A PROTOTYPE. 
+
+Everything that works, works but some of the functionality is missing.
 Also please be aware that there maybe some slight changes to the existing API
 
 ~~~~
