@@ -23,19 +23,8 @@ class MappedClass(val simpleName: String, val packageName: String, val classType
      * @param annotation the mapping annotation
      */
     fun addMapping(name: String, type: String, annotation: Annotation) {
-        mappings.add(MappingInfo(name, type, annotation))
+        mappings.add(create(name, type, annotation))
     }
-
-}
-
-/**
- * Mapping information for one field
- *
- * @property name the name of the field
- * @property type the field type
- * @property annotation the mapping annotation
- */
-class MappingInfo(val name: String, val type: String, val annotation: Annotation) {
 
 }
 

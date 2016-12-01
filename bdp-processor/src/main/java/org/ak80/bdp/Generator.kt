@@ -1,7 +1,6 @@
 package org.ak80.bdp
 
 import com.squareup.javapoet.*
-import org.ak80.bdp.annotations.*
 import javax.annotation.processing.Filer
 import javax.lang.model.element.Modifier
 
@@ -11,6 +10,7 @@ import javax.lang.model.element.Modifier
 interface Generator {
 
     fun generateFor(mappedClass: MappedClass)
+
 }
 
 /**
@@ -76,72 +76,10 @@ class BdpGenerator(private var fileWriter: FileWriter) : Generator {
 
 private class MappingGenerator() {
 
-    fun getParseCode(mappingInfo: MappingInfo, setterName: String): String {
-        when (mappingInfo.annotation) {
-            is MappedByte -> return getParseByteMapping(mappingInfo.annotation, setterName)
-            is MappedWord -> return getParseWordMapping(mappingInfo.annotation, setterName)
-            is MappedFlag -> return getParseFlagMapping(mappingInfo.annotation, setterName)
-            is MappedEnum -> return getParseEnumMapping(mappingInfo, setterName)
-            else -> throw IllegalStateException("Parser Mapping ${mappingInfo.annotation.javaClass.name} is not known")
-        }
-    }
-
-    fun getParseByteMapping(mappingInfo: MappedByte, setterName: String): String {
-        return "$setterName(data[${mappingInfo.index}]);\n"
-    }
-
-    fun getParseWordMapping(mappingInfo: MappedWord, setterName: String): String {
-        var code: String
-        if (mappingInfo.endianess.equals(Endian.BIG_ENDIAN)) {
-            code = "(data[${mappingInfo.index}] << BYTE_LENGTH) + data[${mappingInfo.index + 1}]"
-        } else {
-            code = "(data[${mappingInfo.index + 1}] << BYTE_LENGTH) + data[${mappingInfo.index}]"
-        }
-        return "$setterName($code);\n"
-    }
-
-    fun getParseFlagMapping(mappingInfo: MappedFlag, setterName: String): String {
-        return "$setterName((data[${mappingInfo.index}] & ${mappingInfo.bit.name}.getMask()) == ${mappingInfo.bit.name}.getMask());\n"
-    }
-
-    fun getParseEnumMapping(mappingInfo: MappingInfo, setterName: String): String {
-        val mappedEnum: MappedEnum = mappingInfo.annotation as MappedEnum
-        return "$setterName(${mappingInfo.type}.mapFrom(data[${mappedEnum.index}] & ${BinaryUtils.getRangeMask(mappedEnum.from, mappedEnum.to)}));\n"
-    }
+    fun getParseCode(mappingInfo: MappingInfo, setterName: String) = mappingInfo.getMethodBodySetter(setterName)
 
 
-    fun getSerializeCode(mappingInfo: MappingInfo, getterName: String): String {
-        when (mappingInfo.annotation) {
-            is MappedByte -> return getSerializeByteMapping(mappingInfo.annotation, getterName)
-            is MappedWord -> return getSerializeWordMapping(mappingInfo.annotation, getterName)
-            is MappedFlag -> return getSerializeFlagMapping(mappingInfo.annotation, getterName)
-            is MappedEnum -> return getSerializeEnumMapping(mappingInfo.annotation, getterName)
-            else -> throw IllegalStateException("Serializer Mapping ${mappingInfo.annotation.javaClass.name} is not known")
-        }
-    }
-
-    fun getSerializeByteMapping(mappingInfo: MappedByte, getterName: String): String {
-        return "data[${mappingInfo.index}] = $getterName();\n"
-    }
-
-    fun getSerializeWordMapping(mappingInfo: MappedWord, getterName: String): String {
-        if (mappingInfo.endianess.equals(Endian.BIG_ENDIAN)) {
-            return "data[${mappingInfo.index}] = ($getterName() >>> BYTE_LENGTH) & BYTE_MASK;\n" +
-                    "data[${mappingInfo.index + 1}] = $getterName() & BYTE_MASK;\n"
-        } else {
-            return "data[${mappingInfo.index}] = $getterName() & BYTE_MASK;\n" +
-                    "data[${mappingInfo.index + 1}] = ($getterName() >>> BYTE_LENGTH) & BYTE_MASK;\n"
-        }
-    }
-
-    fun getSerializeFlagMapping(mappingInfo: MappedFlag, getterName: String): String {
-        val flagGetterName = getterName.replace("get", "is")
-        return "if($flagGetterName()) { data[${mappingInfo.index}] = data[${mappingInfo.index}] | ${mappingInfo.bit}.getMask(); } else { data[${mappingInfo.index}] = data[${mappingInfo.index}] & ~${mappingInfo.bit}.getMask(); }\n"
-    }
-
-    fun getSerializeEnumMapping(mappingInfo: MappedEnum, getterName: String): String {
-        return "data[${mappingInfo.index}] = $getterName().mapTo();\n"
-    }
+    fun getSerializeCode(mappingInfo: MappingInfo, getterName: String) = mappingInfo.getMethodBodyGetter(getterName)
 
 }
 

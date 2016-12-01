@@ -15,7 +15,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
-import java.lang.annotation.Annotation;
 
 import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.CoreMatchers.is;
@@ -67,19 +66,6 @@ public class BdpGeneratorTest {
     TypeSpec typeSpec = getTypeSpec();
     assertThat(typeSpec.name, is(parserClassName));
     assertThat(typeSpec.modifiers, hasItems(Modifier.PUBLIC));
-  }
-
-  @Test
-  public void build_unknownAnnotation_throwsException() {
-    // Given
-    BdpGenerator bdpGenerator = new BdpGenerator(fileWriter);
-    mappedClass.addMapping("field1", "Foo", mock(Annotation.class));
-
-    // Then
-    expectedException.expect(IllegalStateException.class);
-
-    // When
-    bdpGenerator.generateFor(mappedClass);
   }
 
   private TypeSpec getTypeSpec() {
