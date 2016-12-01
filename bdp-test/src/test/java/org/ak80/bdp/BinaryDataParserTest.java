@@ -79,6 +79,9 @@ public class BinaryDataParserTest {
   public void flagMapping_parse_hasIsMethod() {
     // Given
     TestClass testClass = new TestClass();
+    testClass.setFlag0(true);
+    testClass.setFlag1(true);
+
     TestClassParser parser = new TestClassParser();
     int[] data = new int[]{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0b00010000};
 
