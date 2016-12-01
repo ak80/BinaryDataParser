@@ -9,7 +9,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 public class BinaryDataParserTest {
 
   @Test
-  public void parse_byteMapping_parserClassWithParseMethod() {
+  public void byteMapping_parse_hasGetMethod() {
     // Given
     TestClass testClass = new TestClass();
     TestClassParser parser = new TestClassParser();
@@ -24,23 +24,7 @@ public class BinaryDataParserTest {
   }
 
   @Test
-  public void parse_wordMapping_parserClassWithParseMethod() {
-    // Given
-    TestClass testClass = new TestClass();
-    TestClassParser parser = new TestClassParser();
-
-    int[] data = new int[]{0xff, 0xff, 0x01, 0x02, 0x03, 0x04, 0xff, 0xff};
-
-    // When
-    parser.parse(testClass, data);
-
-    // Then
-    assertThat(testClass.getWordBig(), is(0x0102));
-    assertThat(testClass.getWordLittle(), is(0x0403));
-  }
-
-  @Test
-  public void serialize_byteMapping_parserClassWithSerializeMethod() {
+  public void byteMapping_serialize_serializeFromSetMethod() {
     // Given
     TestClassParser parser = new TestClassParser();
     int[] data = new int[]{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
@@ -58,7 +42,23 @@ public class BinaryDataParserTest {
   }
 
   @Test
-  public void serialize_wordMapping_parserClassWithSerializeMethod() {
+  public void wordMapping_parse_hasGetMethod() {
+    // Given
+    TestClass testClass = new TestClass();
+    TestClassParser parser = new TestClassParser();
+
+    int[] data = new int[]{0xff, 0xff, 0x01, 0x02, 0x03, 0x04, 0xff, 0xff};
+
+    // When
+    parser.parse(testClass, data);
+
+    // Then
+    assertThat(testClass.getWordBig(), is(0x0102));
+    assertThat(testClass.getWordLittle(), is(0x0403));
+  }
+
+  @Test
+  public void wordMapping_serialize_serializeFromSetMethod() {
     // Given
     TestClassParser parser = new TestClassParser();
     int[] data = new int[]{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
@@ -76,7 +76,7 @@ public class BinaryDataParserTest {
   }
 
   @Test
-  public void parse_flagMapping_parserClassWithParseMethod() {
+  public void flagMapping_parse_hasIsMethod() {
     // Given
     TestClass testClass = new TestClass();
     TestClassParser parser = new TestClassParser();
@@ -91,7 +91,7 @@ public class BinaryDataParserTest {
   }
 
   @Test
-  public void serialize_flagMapping_parserClassWithParseMethod() {
+  public void flagMapping_serialize_fromSetMethod() {
     // Given
     TestClassParser parser = new TestClassParser();
     int[] data = new int[]{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
