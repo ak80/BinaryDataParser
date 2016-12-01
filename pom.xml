@@ -14,6 +14,15 @@
         <module>bdp-test</module>
     </modules>
 
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <global.version>1.0.2-SNAPSHOT</global.version>
+        <kotlin.version>1.0.2-1</kotlin.version>
+        <junit.version>4.12</junit.version>
+        <mockito.version>1.10.17</mockito.version>
+        <hamcrest.version>1.3</hamcrest.version>
+    </properties>
+
     <name>${project.groupId}:${project.artifactId}</name>
     <description>BinaryDataParser helps to parse binary data into POJOs, with custom parsers generated from
         annotations
@@ -43,11 +52,27 @@
         <tag>BinaryDataParser-0.1.0</tag>
     </scm>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <global.version>1.0.2-SNAPSHOT</global.version>
-        <kotlin.version>1.0.2-1</kotlin.version>
-    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <version>${mockito.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-all</artifactId>
+            <version>${hamcrest.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 
     <build>
         <plugins>
@@ -129,9 +154,6 @@
                         </goals>
                     </execution>
                 </executions>
-                <configuration>
-
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.eluder.coveralls</groupId>

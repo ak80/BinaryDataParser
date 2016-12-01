@@ -1,9 +1,6 @@
 package org.ak80.bdp;
 
-import org.ak80.bdp.annotations.Endian;
-import org.ak80.bdp.annotations.MappedByte;
-import org.ak80.bdp.annotations.MappedFlag;
-import org.ak80.bdp.annotations.MappedWord;
+import org.ak80.bdp.annotations.*;
 
 public class TestClass {
 
@@ -24,6 +21,9 @@ public class TestClass {
 
   @MappedFlag(index = 6, bit = Bit.BIT_4, name = "flag 1")
   private boolean flag1;
+
+  @MappedEnum(index = 7, from = Bit.BIT_5, to = Bit.BIT_0, name = "mapped Enum")
+  private SampleEnum sampleEnum = SampleEnum.VALUE_A;
 
   public int getByte0() {
     return byte0;
@@ -71,6 +71,14 @@ public class TestClass {
 
   public void setFlag1(boolean flag1) {
     this.flag1 = flag1;
+  }
+
+  public SampleEnum getSampleEnum() {
+    return sampleEnum;
+  }
+
+  public void setSampleEnum(SampleEnum sampleEnum) {
+    this.sampleEnum = sampleEnum;
   }
 
 }

@@ -1,10 +1,7 @@
 package org.ak80.bdp
 
 import com.squareup.javapoet.*
-import org.ak80.bdp.annotations.Endian
-import org.ak80.bdp.annotations.MappedByte
-import org.ak80.bdp.annotations.MappedFlag
-import org.ak80.bdp.annotations.MappedWord
+import org.ak80.bdp.annotations.*
 import javax.annotation.processing.Filer
 import javax.lang.model.element.Modifier
 
@@ -84,7 +81,8 @@ private class MappingGenerator() {
             is MappedByte -> return getParseByteMapping(mappingInfo.annotation, setterName)
             is MappedWord -> return getParseWordMapping(mappingInfo.annotation, setterName)
             is MappedFlag -> return getParseFlagMapping(mappingInfo.annotation, setterName)
-            else -> throw IllegalStateException("Mapping ${mappingInfo.annotation.javaClass.name} is not known")
+            is MappedEnum -> return getParseEnumMapping(mappingInfo, setterName)
+            else -> throw IllegalStateException("Parser Mapping ${mappingInfo.annotation.javaClass.name} is not known")
         }
     }
 
@@ -106,12 +104,19 @@ private class MappingGenerator() {
         return "$setterName((data[${mappingInfo.index}] & ${mappingInfo.bit.name}.getMask()) == ${mappingInfo.bit.name}.getMask());\n"
     }
 
+    fun getParseEnumMapping(mappingInfo: MappingInfo, setterName: String): String {
+        val mappedEnum: MappedEnum = mappingInfo.annotation as MappedEnum
+        return "$setterName(${mappingInfo.type}.mapFrom(data[${mappedEnum.index}] & ${BinaryUtils.getRangeMask(mappedEnum.from, mappedEnum.to)}));\n"
+    }
+
+
     fun getSerializeCode(mappingInfo: MappingInfo, getterName: String): String {
         when (mappingInfo.annotation) {
             is MappedByte -> return getSerializeByteMapping(mappingInfo.annotation, getterName)
             is MappedWord -> return getSerializeWordMapping(mappingInfo.annotation, getterName)
             is MappedFlag -> return getSerializeFlagMapping(mappingInfo.annotation, getterName)
-            else -> throw IllegalStateException("Mapping ${mappingInfo.annotation.javaClass.name} is not known")
+            is MappedEnum -> return getSerializeEnumMapping(mappingInfo.annotation, getterName)
+            else -> throw IllegalStateException("Serializer Mapping ${mappingInfo.annotation.javaClass.name} is not known")
         }
     }
 
@@ -133,6 +138,11 @@ private class MappingGenerator() {
         val flagGetterName = getterName.replace("get", "is")
         return "if($flagGetterName()) { data[${mappingInfo.index}] = data[${mappingInfo.index}] | ${mappingInfo.bit}.getMask(); } else { data[${mappingInfo.index}] = data[${mappingInfo.index}] & ~${mappingInfo.bit}.getMask(); }\n"
     }
+
+    fun getSerializeEnumMapping(mappingInfo: MappedEnum, getterName: String): String {
+        return "data[${mappingInfo.index}] = $getterName().mapTo();\n"
+    }
+
 }
 
 /**

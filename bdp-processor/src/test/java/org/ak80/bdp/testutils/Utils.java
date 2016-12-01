@@ -2,10 +2,7 @@ package org.ak80.bdp.testutils;
 
 
 import org.ak80.bdp.Bit;
-import org.ak80.bdp.annotations.Endian;
-import org.ak80.bdp.annotations.MappedByte;
-import org.ak80.bdp.annotations.MappedFlag;
-import org.ak80.bdp.annotations.MappedWord;
+import org.ak80.bdp.annotations.*;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -43,6 +40,15 @@ public class Utils {
     when(mappedFlag.index()).thenReturn(index);
     when(mappedFlag.name()).thenReturn(name);
     when(mappedFlag.bit()).thenReturn(bit);
+    return mappedFlag;
+  }
+
+  public static MappedEnum createMappedEnum(int index, Bit from, Bit to, String name) {
+    MappedEnum mappedFlag = mock(MappedEnum.class);
+    when(mappedFlag.index()).thenReturn(index);
+    when(mappedFlag.name()).thenReturn(name);
+    when(mappedFlag.from()).thenReturn(from);
+    when(mappedFlag.to()).thenReturn(to);
     return mappedFlag;
   }
 

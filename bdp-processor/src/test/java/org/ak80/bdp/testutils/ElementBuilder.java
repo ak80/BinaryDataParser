@@ -2,6 +2,8 @@ package org.ak80.bdp.testutils;
 
 import com.squareup.javapoet.ClassName;
 import org.ak80.bdp.annotations.MappedByte;
+import org.ak80.bdp.annotations.MappedEnum;
+import org.ak80.bdp.annotations.MappedFlag;
 import org.ak80.bdp.annotations.MappedWord;
 
 import javax.lang.model.element.*;
@@ -24,6 +26,18 @@ public class ElementBuilder {
   public static Element createMappedField(String fieldName, TypeKind fieldType, MappedWord annotation, Class parentClass) {
     Element element = getElement(fieldName, fieldType, parentClass);
     when(element.getAnnotation(MappedWord.class)).thenReturn(annotation);
+    return element;
+  }
+
+  public static Element createMappedField(String fieldName, TypeKind fieldType, MappedFlag annotation, Class parentClass) {
+    Element element = getElement(fieldName, fieldType, parentClass);
+    when(element.getAnnotation(MappedFlag.class)).thenReturn(annotation);
+    return element;
+  }
+
+  public static Element createMappedField(String fieldName, TypeKind fieldType, MappedEnum annotation, Class parentClass) {
+    Element element = getElement(fieldName, fieldType, parentClass);
+    when(element.getAnnotation(MappedEnum.class)).thenReturn(annotation);
     return element;
   }
 

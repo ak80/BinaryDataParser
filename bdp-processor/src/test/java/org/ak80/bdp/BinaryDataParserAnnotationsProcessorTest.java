@@ -1,6 +1,8 @@
 package org.ak80.bdp;
 
 import org.ak80.bdp.annotations.MappedByte;
+import org.ak80.bdp.annotations.MappedEnum;
+import org.ak80.bdp.annotations.MappedFlag;
 import org.ak80.bdp.annotations.MappedWord;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,6 +19,7 @@ import java.util.Collections;
 import java.util.Set;
 
 import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
@@ -88,9 +91,12 @@ public class BinaryDataParserAnnotationsProcessorTest {
     Set<String> annotationTypes = processor.getSupportedAnnotationTypes();
 
     // Then
+    assertThat(annotationTypes, hasSize(4));
     assertThat(annotationTypes, hasItems(
         MappedByte.class.getName(),
-        MappedWord.class.getName()
+        MappedWord.class.getName(),
+        MappedFlag.class.getName(),
+        MappedEnum.class.getName()
     ));
   }
 

@@ -1,6 +1,7 @@
 package org.ak80.bdp
 
 import org.ak80.bdp.annotations.MappedByte
+import org.ak80.bdp.annotations.MappedEnum
 import org.ak80.bdp.annotations.MappedFlag
 import org.ak80.bdp.annotations.MappedWord
 import javax.annotation.processing.Messager
@@ -9,6 +10,8 @@ import javax.annotation.processing.RoundEnvironment
 import javax.lang.model.element.Element
 import javax.lang.model.element.ElementKind
 import javax.lang.model.element.TypeElement
+import javax.lang.model.type.TypeKind
+import javax.lang.model.type.TypeMirror
 import javax.tools.Diagnostic
 
 /**
@@ -40,7 +43,13 @@ interface BdpProcessor {
  */
 class CoreProcessor(private val mappedClasses: MappedClasses, private val generator: Generator) : BdpProcessor {
 
-    var fieldMappingAnnotations = setOf(MappedByte::class.java, MappedWord::class.java, MappedFlag::class.java)
+    var fieldMappingAnnotations = setOf(
+            MappedByte::class.java,
+            MappedWord::class.java,
+            MappedFlag::class.java,
+            MappedEnum::class.java
+    )
+
     var processingEnvironment: ProcessingEnvironment? = null
 
     private val messager: Messager by lazy {
@@ -69,6 +78,11 @@ class CoreProcessor(private val mappedClasses: MappedClasses, private val genera
             if (exit) break
         }
 
+        for (annotatedElement in roundEnv.getElementsAnnotatedWith(MappedEnum::class.java)) {
+            exit = processMappedField(annotatedElement)
+            if (exit) break
+        }
+
         for (byteMappedClass in mappedClasses.getClasses()) {
             generator.generateFor(byteMappedClass)
         }
@@ -87,12 +101,20 @@ class CoreProcessor(private val mappedClasses: MappedClasses, private val genera
 
         val fieldName = element.simpleName.toString()
         val typeMirror = element.asType()
-        val fieldType = typeMirror.kind.name.toString()
+        val fieldType = getType(typeMirror)
 
         val annotation = getAnnotation(element)
         mappedClass.addMapping(fieldName, fieldType, annotation)
 
         return false
+    }
+
+    private fun getType(typeMirror: TypeMirror): String {
+        if (typeMirror.kind.equals(TypeKind.DECLARED)) {
+            return typeMirror.toString();
+        } else {
+            return typeMirror.kind.name.toString()
+        }
     }
 
     private fun getMappedClass(element: Element): MappedClass {

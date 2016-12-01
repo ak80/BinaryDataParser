@@ -1,9 +1,7 @@
 package org.ak80.bdp;
 
 import com.squareup.javapoet.TypeName;
-import org.ak80.bdp.annotations.Endian;
-import org.ak80.bdp.annotations.MappedByte;
-import org.ak80.bdp.annotations.MappedWord;
+import org.ak80.bdp.annotations.*;
 import org.ak80.bdp.testutils.ElementBuilder;
 import org.ak80.bdp.testutils.Utils;
 import org.junit.Rule;
@@ -31,8 +29,7 @@ import java.lang.annotation.Annotation;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static org.ak80.bdp.testutils.Utils.createMappedByte;
-import static org.ak80.bdp.testutils.Utils.createMappedWord;
+import static org.ak80.bdp.testutils.Utils.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertThat;
@@ -183,6 +180,42 @@ public class CoreProcessorTest {
   }
 
   @Test
+  public void process_containsFlagMapped_callsGenerator() {
+    // Given
+    CoreProcessor coreProcessor = new CoreProcessor(mappedClasses, generator);
+    coreProcessor.init(processingEnv);
+
+    MappedFlag mappedFlag = createMappedFlag(0, Bit.BIT_0, "name");
+    Element element = ElementBuilder.createMappedField("foo", TypeKind.BOOLEAN, mappedFlag, CoreProcessor.class);
+    Set<? extends Element> elements = Utils.setOf(element);
+    setupMappedFlagElementsInRoundEnv(elements);
+
+    // When
+    coreProcessor.process(typeElements, roundEnv);
+
+    // Then
+    verify(generator).generateFor(any());
+  }
+
+  @Test
+  public void process_containsEnumMapped_callsGenerator() {
+    // Given
+    CoreProcessor coreProcessor = new CoreProcessor(mappedClasses, generator);
+    coreProcessor.init(processingEnv);
+
+    MappedEnum mappedEnum = createMappedEnum(0, Bit.BIT_7, Bit.BIT_3, "name");
+    Element element = ElementBuilder.createMappedField("foo", TypeKind.DECLARED, mappedEnum, CoreProcessor.class);
+    Set<? extends Element> elements = Utils.setOf(element);
+    setupMappedEnumElementsInRoundEnv(elements);
+
+    // When
+    coreProcessor.process(typeElements, roundEnv);
+
+    // Then
+    verify(generator).generateFor(any());
+  }
+
+  @Test
   public void process_containsByteMapped_mappedClassesCleared() {
     // Given
     CoreProcessor coreProcessor = new CoreProcessor(mappedClasses, generator);
@@ -244,6 +277,14 @@ public class CoreProcessorTest {
 
   private void setupMappedWordElementsInRoundEnv(Set<? extends Element> elements) {
     doReturn(elements).when(roundEnv).getElementsAnnotatedWith(MappedWord.class);
+  }
+
+  private void setupMappedFlagElementsInRoundEnv(Set<? extends Element> elements) {
+    doReturn(elements).when(roundEnv).getElementsAnnotatedWith(MappedFlag.class);
+  }
+
+  private void setupMappedEnumElementsInRoundEnv(Set<? extends Element> elements) {
+    doReturn(elements).when(roundEnv).getElementsAnnotatedWith(MappedEnum.class);
   }
 
   private Map<String, MappedClass> getMapBySimpleName(List<MappedClass> mappedClasses) {

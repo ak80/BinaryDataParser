@@ -123,4 +123,19 @@ public class BdpGenerator_ParseTest {
     assertThat(parseMethod.code.toString(), is("simpleName.setField1((data[1] & BIT_3.getMask()) == BIT_3.getMask());\n"));
   }
 
+  @Test
+  public void mappedEnum_parserMethod_withBuilder() {
+    // Given
+    BdpGenerator bdpGenerator = new BdpGenerator(fileWriter);
+    mappedClass.addMapping("field1", "Foo", Utils.createMappedEnum(1, Bit.BIT_3, Bit.BIT_0, "name1"));
+
+    // When
+    bdpGenerator.generateFor(mappedClass);
+
+    // Then
+    MethodSpec parseMethod = getTypeSpec(fileWriter, typeSpecBuilderCaptor).methodSpecs.get(METHOD_INDEX_PARSE);
+    verifyMethodSignature(parseMethod, bdpGenerator.getParseMethodPrefix());
+    assertThat(parseMethod.code.toString(), is("simpleName.setField1(Foo.mapFrom(data[1] & 15));\n"));
+  }
+
 }

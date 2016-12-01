@@ -2,6 +2,7 @@ package org.ak80.bdp;
 
 import com.google.auto.service.AutoService;
 import org.ak80.bdp.annotations.MappedByte;
+import org.ak80.bdp.annotations.MappedEnum;
 import org.ak80.bdp.annotations.MappedFlag;
 import org.ak80.bdp.annotations.MappedWord;
 
@@ -38,10 +39,11 @@ public class BinaryDataParserAnnotationsProcessor extends AbstractProcessor {
 
   @Override
   public Set<String> getSupportedAnnotationTypes() {
-    Set<String> annotations = new LinkedHashSet<String>();
+    Set<String> annotations = new LinkedHashSet<>();
     annotations.add(MappedByte.class.getCanonicalName());
     annotations.add(MappedWord.class.getCanonicalName());
     annotations.add(MappedFlag.class.getCanonicalName());
+    annotations.add(MappedEnum.class.getCanonicalName());
     return annotations;
   }
 

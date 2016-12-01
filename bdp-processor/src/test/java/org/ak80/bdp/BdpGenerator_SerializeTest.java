@@ -79,7 +79,6 @@ public class BdpGenerator_SerializeTest {
     assertThat(parseMethod.code.toString(), is("data[1] = simpleName.getField1();\n"));
   }
 
-
   @Test
   public void mappedBigEndianWord_parserMethod_withBuilder() {
     // Given
@@ -130,6 +129,21 @@ public class BdpGenerator_SerializeTest {
         " data[1] = data[1] | BIT_3.getMask(); " +
         "} else {" +
         " data[1] = data[1] & ~BIT_3.getMask(); }\n"));
+  }
+
+  @Test
+  public void mappedEnum_serializeMethod_withBuilder() {
+    // Given
+    BdpGenerator bdpGenerator = new BdpGenerator(fileWriter);
+    mappedClass.addMapping("field1", "Foo", Utils.createMappedEnum(1, Bit.BIT_3, Bit.BIT_0, "name1"));
+
+    // When
+    bdpGenerator.generateFor(mappedClass);
+
+    // Then
+    MethodSpec parseMethod = getTypeSpec(fileWriter, typeSpecBuilderCaptor).methodSpecs.get(METHOD_INDEX_SERIALIZE);
+    verifyMethodSignature(parseMethod, bdpGenerator.getSerializeMethodPrefix());
+    assertThat(parseMethod.code.toString(), is("data[1] = simpleName.getField1().mapTo();\n"));
   }
 
 }
