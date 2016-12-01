@@ -26,19 +26,23 @@ The code is written in Kotlin but the unit tests are in Java. The software is li
 ## Goals
 Here is the goal for the first relase: *Features still missing are printed cursive*
 
-Generate parser and *serializer* for byte data based an annotations on properties of the class.
+Generate parser and serializer for byte data based an annotations on properties of the class.
 
-For each class with annotations a Parser class will be generated. The Parser *consumes an int array* and sets the
-properties according to the definitions made with the annotations.
+For each class with annotations a Parser-Serializer class will be generated. When parsing it consumes an int array and sets the
+properties according to the definitions made with the annotations. When serializing it produces an int array based on the properties of the given object.
 
 ## Use of the AnnotationsProcessor
 The AnnotationsProcessor is in the bdp-runtime JAR file and registers a Service. Just drop it into your classpath!
 
-## Planned Features
 
+## Implemented Features
 * Mapping a signed or unsigned single byte value to an int
 * Mapping a signed or unsigned multi byte value to an int or long using big or little endian
-* Extracting a signed or unsigned numeric value with a bit mask
 * Mapping a single bit to a boolean
-* Mapping bits to a enum or constant
+
+## Planned Features
+
+* Extracting a signed or unsigned numeric value with a bit mask
+* Mapping bits to a enum or constant: partially
 * Handling mask bits (bit flags)
+* Mapping into an existing array
