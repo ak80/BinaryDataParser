@@ -23,7 +23,7 @@ public class MappingInfoByteTest {
   }
 
   @Test
-  public void getMethodBod_Setter_produceMethodBody() {
+  public void getMethodBodySetter_produceMethodBody() {
     // Given
     MappedByte mappedByte = createMappedByte(1, "name");
     MappingInfo mappingInfo = new MappingInfoByte("field", "int", mappedByte);

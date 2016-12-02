@@ -35,4 +35,18 @@ public @interface MappedEnum {
    */
   Bit to();
 
+  /**
+   * Name of the mapTo() method to map enum to binary value
+   *
+   * @return
+   */
+  String mapTo() default "mapTo";
+
+  /**
+   * Name of the mapFrom() method to map binary value to enum
+   *
+   * @return
+   */
+  String mapFrom() default "mapFrom";
+
 }

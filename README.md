@@ -41,10 +41,11 @@ The AnnotationsProcessor is in the bdp-runtime JAR file and registers a Service.
 * Mapping a signed or unsigned single byte value to an int
 * Mapping a signed or unsigned multi byte value to an int or long using big or little endian
 * Mapping a single bit to a boolean
+* Mapping one or more bits to an enum, with utility methods defined on the enum
 
 ## Planned Features
 
 * Extracting a signed or unsigned numeric value with a bit mask
-* Mapping bits to a enum or constant: partially
+* Mapping one or more bits to an enum, with a builder class
 * Handling mask bits (bit flags)
 * Mapping into an existing array

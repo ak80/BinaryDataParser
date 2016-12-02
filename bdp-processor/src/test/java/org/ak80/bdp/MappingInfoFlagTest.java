@@ -23,7 +23,7 @@ public class MappingInfoFlagTest {
   }
 
   @Test
-  public void getMethodBod_Setter_produceMethodBody() {
+  public void getMethodBodySetter_produceMethodBody() {
     // Given
     MappedFlag mappedFlag = createMappedFlag(1, Bit.BIT_0, "name");
     MappingInfo mappingInfo = new MappingInfoFlag("field", "int", mappedFlag);

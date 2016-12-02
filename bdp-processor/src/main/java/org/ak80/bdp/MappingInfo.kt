@@ -73,8 +73,8 @@ class MappingInfoFlag(name: String, type: String, val flagAnnotation: MappedFlag
 
 class MappingInfoEnum(name: String, type: String, val enumAnnotation: MappedEnum) : MappingInfo(name, type, enumAnnotation) {
 
-    override fun getMethodBodyGetter(getterName: String) = "data[${enumAnnotation.index}] = $getterName().mapTo();\n"
+    override fun getMethodBodyGetter(getterName: String) = "data[${enumAnnotation.index}] = $getterName().${enumAnnotation.mapTo}();\n"
 
-    override fun getMethodBodySetter(setterName: String) = "$setterName(${type}.mapFrom(data[${enumAnnotation.index}] & ${BinaryUtils.getRangeMask(enumAnnotation.from, enumAnnotation.to)}));\n"
+    override fun getMethodBodySetter(setterName: String) = "$setterName(${type}.${enumAnnotation.mapFrom}(data[${enumAnnotation.index}] & ${BinaryUtils.getRangeMask(enumAnnotation.from, enumAnnotation.to)}));\n"
 
 }

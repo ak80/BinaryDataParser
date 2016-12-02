@@ -49,6 +49,8 @@ public class Utils {
     when(mappedFlag.name()).thenReturn(name);
     when(mappedFlag.from()).thenReturn(from);
     when(mappedFlag.to()).thenReturn(to);
+    when(mappedFlag.mapFrom()).thenReturn("mapFrom");
+    when(mappedFlag.mapTo()).thenReturn("mapTo");
     return mappedFlag;
   }
 

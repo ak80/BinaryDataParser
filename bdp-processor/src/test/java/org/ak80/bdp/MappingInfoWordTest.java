@@ -24,7 +24,7 @@ public class MappingInfoWordTest {
   }
 
   @Test
-  public void getMethodBod_bigEndian_produceMethodBody() {
+  public void getMethodBodySetter_bigEndian_produceMethodBody() {
     // Given
     MappedWord mappedWord = createMappedWord(1, "name", Endian.BIG_ENDIAN);
     MappingInfo mappingInfo = new MappingInfoWord("field", "int", mappedWord);
@@ -50,7 +50,7 @@ public class MappingInfoWordTest {
   }
 
   @Test
-  public void getMethodBod_littleEndian_produceMethodBody() {
+  public void getMethodBodySetter_littleEndian_produceMethodBody() {
     // Given
     MappedWord mappedWord = createMappedWord(1, "name", Endian.LITTLE_ENDIAN);
     MappingInfo mappingInfo = new MappingInfoWord("field", "int", mappedWord);
