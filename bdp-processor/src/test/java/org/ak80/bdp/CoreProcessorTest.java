@@ -3,7 +3,6 @@ package org.ak80.bdp;
 import com.squareup.javapoet.TypeName;
 import org.ak80.bdp.annotations.*;
 import org.ak80.bdp.testutils.ElementBuilder;
-import org.ak80.bdp.testutils.Utils;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -91,7 +90,7 @@ public class CoreProcessorTest {
     MappedByte mappedByte = createMappedByte(0, "name");
     Element element = ElementBuilder.createMappedField("foo", TypeKind.INT, mappedByte, CoreProcessor.class);
 
-    Set<? extends Element> elements = Utils.setOf(element);
+    Set<? extends Element> elements = setOf(element);
     setupMappedByteElementsInRoundEnv(elements);
 
     // When
@@ -109,7 +108,7 @@ public class CoreProcessorTest {
 
     MappedByte mappedByte = createMappedByte(0, "name");
     Element element = ElementBuilder.createMappedField("foo", TypeKind.INT, mappedByte, CoreProcessor.class);
-    Set<? extends Element> elements = Utils.setOf(element);
+    Set<? extends Element> elements = setOf(element);
     setupMappedByteElementsInRoundEnv(elements);
 
     // When
@@ -135,7 +134,7 @@ public class CoreProcessorTest {
     MappedByte mappedByte3 = createMappedByte(0, "name");
     Element element3 = ElementBuilder.createMappedField("foo", TypeKind.INT, mappedByte3, ElementBuilder.class);
 
-    Set<? extends Element> elements = Utils.setOf(element1, element2, element3);
+    Set<? extends Element> elements = setOf(element1, element2, element3);
     setupMappedByteElementsInRoundEnv(elements);
 
     // When
@@ -169,7 +168,7 @@ public class CoreProcessorTest {
 
     MappedWord mappedWord = createMappedWord(0, "name", Endian.BIG_ENDIAN);
     Element element = ElementBuilder.createMappedField("foo", TypeKind.INT, mappedWord, CoreProcessor.class);
-    Set<? extends Element> elements = Utils.setOf(element);
+    Set<? extends Element> elements = setOf(element);
     setupMappedWordElementsInRoundEnv(elements);
 
     // When
@@ -187,7 +186,7 @@ public class CoreProcessorTest {
 
     MappedFlag mappedFlag = createMappedFlag(0, Bit.BIT_0, "name");
     Element element = ElementBuilder.createMappedField("foo", TypeKind.BOOLEAN, mappedFlag, CoreProcessor.class);
-    Set<? extends Element> elements = Utils.setOf(element);
+    Set<? extends Element> elements = setOf(element);
     setupMappedFlagElementsInRoundEnv(elements);
 
     // When
@@ -205,7 +204,7 @@ public class CoreProcessorTest {
 
     MappedEnum mappedEnum = createMappedEnum(0, Bit.BIT_7, Bit.BIT_3, "name");
     Element element = ElementBuilder.createMappedField("foo", TypeKind.DECLARED, mappedEnum, CoreProcessor.class);
-    Set<? extends Element> elements = Utils.setOf(element);
+    Set<? extends Element> elements = setOf(element);
     setupMappedEnumElementsInRoundEnv(elements);
 
     // When
@@ -224,7 +223,7 @@ public class CoreProcessorTest {
 
     MappedByte mappedByte = createMappedByte(0, "name");
     Element element = ElementBuilder.createMappedField("foo", TypeKind.INT, mappedByte, CoreProcessor.class);
-    Set<? extends Element> elements = Utils.setOf(element);
+    Set<? extends Element> elements = setOf(element);
     setupMappedByteElementsInRoundEnv(elements);
 
     // When
@@ -241,7 +240,7 @@ public class CoreProcessorTest {
     coreProcessor.init(processingEnv);
 
     Element element = ElementBuilder.newElement(ElementKind.CLASS);
-    Set<? extends Element> elements = Utils.setOf(element);
+    Set<? extends Element> elements = setOf(element);
     setupMappedByteElementsInRoundEnv(elements);
 
     // When
@@ -262,7 +261,7 @@ public class CoreProcessorTest {
     MappedWord mappedWord = createMappedWord(1, "name", Endian.BIG_ENDIAN);
     when(element.getAnnotation(MappedWord.class)).thenReturn(mappedWord);
 
-    setupMappedByteElementsInRoundEnv(Utils.setOf(element));
+    setupMappedByteElementsInRoundEnv(setOf(element));
 
     // Then
     expectedException.expect(IllegalStateException.class);

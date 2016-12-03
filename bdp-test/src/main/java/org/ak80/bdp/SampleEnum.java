@@ -15,8 +15,9 @@ public enum SampleEnum {
         return VALUE_A;
       case 1:
         return VALUE_B;
+      default:
+        return null;
     }
-    return null;
   }
 
   public int mapTo() {
@@ -25,8 +26,9 @@ public enum SampleEnum {
         return 0;
       case VALUE_B:
         return 1;
+      default:
+        return 0;
     }
-    return -1;
   }
 
 }
