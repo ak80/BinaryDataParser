@@ -50,13 +50,7 @@ public class ClassToMap {
   private int wordLittle;
 
   // getters / setters omitted for brevity
-
-  public int getByte0() {
-    return byte0;
-  }
-
-  public void setByte0(int byte0) {
-
+  
 }
 
 ```
