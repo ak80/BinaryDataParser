@@ -25,6 +25,9 @@ public class TestClass {
   @MappedEnum(index = 7, from = Bit.BIT_5, to = Bit.BIT_0, name = "mapped Enum")
   private SampleEnum sampleEnum = SampleEnum.VALUE_A;
 
+  @MappedEnum(index = 7, from = Bit.BIT_7, to = Bit.BIT_6, name = "mapped custom Enum", mapTo = "toCode", mapFrom = "fromCode")
+  private SampleEnumCustomMethods sampleEnumCustomMethods = SampleEnumCustomMethods.VALUE_0;
+
   public int getByte0() {
     return byte0;
   }
@@ -81,4 +84,11 @@ public class TestClass {
     this.sampleEnum = sampleEnum;
   }
 
+  public SampleEnumCustomMethods getSampleEnumCustomMethods() {
+    return sampleEnumCustomMethods;
+  }
+
+  public void setSampleEnumCustomMethods(SampleEnumCustomMethods sampleEnumCustomMethods) {
+    this.sampleEnumCustomMethods = sampleEnumCustomMethods;
+  }
 }

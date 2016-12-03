@@ -135,7 +135,7 @@ public class BdpGenerator_ParseTest {
     // Then
     MethodSpec parseMethod = getTypeSpec(fileWriter, typeSpecBuilderCaptor).methodSpecs.get(METHOD_INDEX_PARSE);
     verifyMethodSignature(parseMethod, bdpGenerator.getParseMethodPrefix());
-    assertThat(parseMethod.code.toString(), is("simpleName.setField1(Foo.mapFrom(data[1] & 15));\n"));
+    assertThat(parseMethod.code.toString(), is("simpleName.setField1(Foo.mapFrom((data[1] & 15) >>> 0));\n"));
   }
 
 }

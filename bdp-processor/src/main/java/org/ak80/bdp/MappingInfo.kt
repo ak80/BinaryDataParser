@@ -29,9 +29,11 @@ fun create(name: String, type: String, annotation: Annotation): MappingInfo {
 
 class MappingInfoByte(name: String, type: String, val byteAnnotation: MappedByte) : MappingInfo(name, type, byteAnnotation) {
 
-    override fun getMethodBodyGetter(getterName: String): String = "data[${byteAnnotation.index}] = $getterName();\n"
+    override fun getMethodBodyGetter(getterName: String) =
+            "data[${byteAnnotation.index}] = $getterName();\n"
 
-    override fun getMethodBodySetter(setterName: String): String = "$setterName(data[${byteAnnotation.index}]);\n"
+    override fun getMethodBodySetter(setterName: String) =
+            "$setterName(data[${byteAnnotation.index}]);\n"
 
 }
 
@@ -66,15 +68,25 @@ class MappingInfoFlag(name: String, type: String, val flagAnnotation: MappedFlag
         return "if($flagGetterName()) { data[${flagAnnotation.index}] = data[${flagAnnotation.index}] | ${flagAnnotation.bit}.getMask(); } else { data[${flagAnnotation.index}] = data[${flagAnnotation.index}] & ~${flagAnnotation.bit}.getMask(); }\n"
     }
 
-    override fun getMethodBodySetter(setterName: String): String = "$setterName((data[${flagAnnotation.index}] & ${flagAnnotation.bit.name}.getMask()) == ${flagAnnotation.bit.name}.getMask());\n"
+    override fun getMethodBodySetter(setterName: String): String =
+            "$setterName((data[${flagAnnotation.index}] & ${flagAnnotation.bit.name}.getMask()) == ${flagAnnotation.bit.name}.getMask());\n"
 
 
 }
 
 class MappingInfoEnum(name: String, type: String, val enumAnnotation: MappedEnum) : MappingInfo(name, type, enumAnnotation) {
 
-    override fun getMethodBodyGetter(getterName: String) = "data[${enumAnnotation.index}] = $getterName().${enumAnnotation.mapTo}();\n"
+    override fun getMethodBodyGetter(getterName: String) =
+            "data[${enumAnnotation.index}] = " +
+                    "data[${enumAnnotation.index}] " +
+                    "| ( ($getterName().${enumAnnotation.mapTo}() << ${enumAnnotation.to.index} ) );\n"
 
-    override fun getMethodBodySetter(setterName: String) = "$setterName(${type}.${enumAnnotation.mapFrom}(data[${enumAnnotation.index}] & ${BinaryUtils.getRangeMask(enumAnnotation.from, enumAnnotation.to)}));\n"
+    override fun getMethodBodySetter(setterName: String) =
+            "$setterName(" +
+                    "${type}.${enumAnnotation.mapFrom}(" +
+                    "(data[${enumAnnotation.index}] " +
+                    "& ${BinaryUtils.getRangeMask(enumAnnotation.from, enumAnnotation.to)}) " +
+                    ">>> ${enumAnnotation.to.index})" +
+                    ");\n"
 
 }

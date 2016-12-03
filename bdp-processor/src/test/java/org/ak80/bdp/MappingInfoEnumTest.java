@@ -20,7 +20,7 @@ public class MappingInfoEnumTest {
     String body = mappingInfo.getMethodBodyGetter("getFoo");
 
     // Then
-    assertThat(body, is("data[1] = getFoo().mapTo();\n"));
+    assertThat(body, is("data[1] = data[1] | ( (getFoo().mapTo() << 2 ) );\n"));
   }
 
   @Test
@@ -33,7 +33,7 @@ public class MappingInfoEnumTest {
     String body = mappingInfo.getMethodBodySetter("setFoo");
 
     // Then
-    assertThat(body, is("setFoo(MappedEnum.mapFrom(data[1] & 60));\n"));
+    assertThat(body, is("setFoo(MappedEnum.mapFrom((data[1] & 60) >>> 2));\n"));
   }
 
   @Test
@@ -47,7 +47,7 @@ public class MappingInfoEnumTest {
     String body = mappingInfo.getMethodBodyGetter("getFoo");
 
     // Then
-    assertThat(body, is("data[1] = getFoo().custom();\n"));
+    assertThat(body, is("data[1] = data[1] | ( (getFoo().custom() << 2 ) );\n"));
   }
 
   @Test
@@ -61,7 +61,7 @@ public class MappingInfoEnumTest {
     String body = mappingInfo.getMethodBodySetter("setFoo");
 
     // Then
-    assertThat(body, is("setFoo(MappedEnum.custom(data[1] & 60));\n"));
+    assertThat(body, is("setFoo(MappedEnum.custom((data[1] & 60) >>> 2));\n"));
   }
 
 

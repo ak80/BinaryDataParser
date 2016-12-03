@@ -151,4 +151,69 @@ public class BinaryDataParserTest {
     assertThat(data, is(dataExpected));
   }
 
+
+  @Test
+  public void customEnumMapping_parse_setsValue() {
+    // Given
+    TestClass testClass = new TestClass();
+
+    TestClassParser parser = new TestClassParser();
+    data[7] = 0b01000000;
+
+    // When
+    parser.parse(testClass, data);
+
+    // Then
+    assertThat(testClass.getSampleEnumCustomMethods(), is(SampleEnumCustomMethods.VALUE_1));
+  }
+
+  @Test
+  public void customEnumMapping_serialize_setsValue() {
+    // Given
+    TestClass testClass = new TestClass();
+
+    TestClassParser parser = new TestClassParser();
+    dataExpected[7] = 0b01000000;
+
+    // When
+    testClass.setSampleEnumCustomMethods(SampleEnumCustomMethods.VALUE_1);
+    parser.serialize(testClass, data);
+
+    // Then
+    assertThat(data, is(dataExpected));
+  }
+
+
+  @Test
+  public void combinedEnumMapping_parse_setsValue() {
+    // Given
+    TestClass testClass = new TestClass();
+
+    TestClassParser parser = new TestClassParser();
+    data[7] = 0b01000001;
+
+    // When
+    parser.parse(testClass, data);
+
+    // Then
+    assertThat(testClass.getSampleEnum(), is(SampleEnum.VALUE_B));
+    assertThat(testClass.getSampleEnumCustomMethods(), is(SampleEnumCustomMethods.VALUE_1));
+  }
+
+  @Test
+  public void combinedMapping_serialize_setsValue() {
+    // Given
+    TestClass testClass = new TestClass();
+
+    TestClassParser parser = new TestClassParser();
+    dataExpected[7] = 0b01000001;
+
+    // When
+    testClass.setSampleEnum(SampleEnum.VALUE_B);
+    testClass.setSampleEnumCustomMethods(SampleEnumCustomMethods.VALUE_1);
+    parser.serialize(testClass, data);
+
+    // Then
+    assertThat(data, is(dataExpected));
+  }
 }

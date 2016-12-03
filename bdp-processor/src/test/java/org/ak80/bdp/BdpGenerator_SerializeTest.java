@@ -143,7 +143,7 @@ public class BdpGenerator_SerializeTest {
     // Then
     MethodSpec parseMethod = getTypeSpec(fileWriter, typeSpecBuilderCaptor).methodSpecs.get(METHOD_INDEX_SERIALIZE);
     verifyMethodSignature(parseMethod, bdpGenerator.getSerializeMethodPrefix());
-    assertThat(parseMethod.code.toString(), is("data[1] = simpleName.getField1().mapTo();\n"));
+    assertThat(parseMethod.code.toString(), is("data[1] = data[1] | ( (simpleName.getField1().mapTo() << 0 ) );\n"));
   }
 
 }
