@@ -31,7 +31,7 @@ Add this dependency to you project
         </dependency>
 ~~~~
 
-### Add annotation to you class
+### Add annotation to the class you want to map
 
 ```java
 
@@ -49,38 +49,14 @@ public class ClassToMap {
   @MappedWord(index = 4, endianess = Endian.LITTLE_ENDIAN)
   private int wordLittle;
 
+  // getters / setters omitted for brevity
 
   public int getByte0() {
     return byte0;
   }
 
   public void setByte0(int byte0) {
-    this.byte0 = byte0;
-  }
 
-  public int getByte1() {
-    return byte1;
-  }
-
-  public void setByte1(int byte1) {
-    this.byte1 = byte1;
-  }
-
-  public int getWordBig() {
-    return wordBig;
-  }
-
-  public void setWordBig(int wordBig) {
-    this.wordBig = wordBig;
-  }
-
-  public int getWordLittle() {
-    return wordLittle;
-  }
-
-  public void setWordLittle(int wordLittle) {
-    this.wordLittle = wordLittle;
-  }
 }
 
 ```
@@ -192,3 +168,5 @@ the byte order, either *Endian.BIG_ENDIAN*, which is the default, or *Endian.LIT
 * Generate documentation
 * Sanity checking for overlapping definitions
 * Sanity checking for unmapped parts
+* Default settings e.g. for endianess
+* Suppport has/get with flags instead of only is
