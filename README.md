@@ -187,7 +187,7 @@ the byte order, either *Endian.BIG_ENDIAN*, which is the default, or *Endian.LIT
 * Mapping one or more bits to a numeric
 * Mapping one or more bits to an enum, with a builder class
 * Handling bit flags for a group of booleans
-* Mapping into an existing array
+* Create a new array when serializing
 * Generate new instance instead of need to pass an existing instance
 * Generate documentation
 * Sanity checking for overlapping definitions
