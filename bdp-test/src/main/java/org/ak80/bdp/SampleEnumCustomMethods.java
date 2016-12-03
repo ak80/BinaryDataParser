@@ -15,8 +15,9 @@ public enum SampleEnumCustomMethods {
         return VALUE_0;
       case 1:
         return VALUE_1;
+      default:
+        return null;
     }
-    return null;
   }
 
   public int toCode() {
@@ -25,8 +26,9 @@ public enum SampleEnumCustomMethods {
         return 0;
       case VALUE_1:
         return 1;
+      default:
+        return -1;
     }
-    return -1;
   }
 
 }
