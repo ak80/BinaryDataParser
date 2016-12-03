@@ -9,9 +9,9 @@ licensed under the Apache License 2.0
 
 ## Quickstart
 
-You need to add a runtime and a compile time dependency and then you can add the annotations to
-the class you want to map. When you compile, a custom mapper will be generated and can then be
-used from you code.
+You need to add a runtime and a compile time dependency. Then you add the annotations to
+the class you want to map. When you compile this clas, a custom mapper will be generated and can then be
+used from your code.
 
 ### Add dependency
 
@@ -31,7 +31,7 @@ Add this dependency to you project
         </dependency>
 ~~~~
 
-### Add annotation to the class you want to map
+### Add annotations to the class you want to map
 
 ```java
 
