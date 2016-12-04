@@ -20,7 +20,7 @@
     <rule ref="rulesets/java/js2ee.xml"/>
     <rule ref="rulesets/java/javabeans.xml"/>
     <rule ref="rulesets/java/junit.xml">
-        <exclude name="JUnitTestsShouldIncludeAssert"/>
+      <!--  <exclude name="JUnitTestsShouldIncludeAssert"/>-->
     </rule>
     <rule ref="rulesets/java/logging-jakarta-commons.xml"/>
     <rule ref="rulesets/java/logging-java.xml"/>
